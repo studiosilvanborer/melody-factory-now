@@ -38,32 +38,59 @@
     />
 
     <script>
-      // Blendet die Startzustände der .reveal-Elemente erst ein, nachdem
-      // der IntersectionObserver steht – scheitert etwas davor, bleibt die
-      // Seite unverändert sichtbar. Läuft im <head>, damit nichts aufblitzt.
+      // Blendet die Startzustände der .reveal-Elemente erst ein, nachdem die
+      // Prüfung steht – scheitert etwas davor, bleibt die Seite unverändert
+      // sichtbar. Läuft im <head>, damit nichts aufblitzt.
+      //
+      // Bewusst kein IntersectionObserver: dessen Callbacks kommen über den
+      // Rendering-Lifecycle und blieben in Tests vereinzelt ganz aus, womit
+      // die letzten Elemente der Seite unsichtbar hängenblieben. Diese
+      // Prüfung läuft direkt und deckt den sichtbaren Bereich sicher ab.
       (function () {
         try {
           if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-          if (!("IntersectionObserver" in window)) return;
 
-          var io = new IntersectionObserver(
-            function (entries) {
-              entries.forEach(function (e) {
-                if (!e.isIntersecting) return;
-                e.target.classList.add("is-in");
-                io.unobserve(e.target);
-              });
-            },
-            { rootMargin: "0px 0px -10% 0px" }
-          );
+          var pending = [];
+          var queued = false;
+
+          function check() {
+            queued = false;
+            var h = window.innerHeight;
+            for (var i = pending.length - 1; i >= 0; i--) {
+              var r = pending[i].getBoundingClientRect();
+              if (r.top < h && r.bottom > 0) {
+                pending[i].classList.add("is-in");
+                pending.splice(i, 1);
+              }
+            }
+            if (!pending.length) {
+              removeEventListener("scroll", schedule);
+              removeEventListener("resize", schedule);
+            }
+          }
+
+          function schedule() {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(check);
+          }
+
+          function init() {
+            pending = [].slice.call(document.querySelectorAll(".reveal"));
+            addEventListener("scroll", schedule, { passive: true });
+            addEventListener("resize", schedule, { passive: true });
+            check();
+          }
 
           document.documentElement.classList.add("js-anim");
 
-          document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".reveal").forEach(function (el) {
-              io.observe(el);
-            });
-          });
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", init);
+          } else {
+            init();
+          }
+          // zweiter direkter Durchlauf, wenn Bilder und Schriften stehen
+          addEventListener("load", check);
         } catch (e) {
           document.documentElement.classList.remove("js-anim");
         }
@@ -312,6 +339,21 @@
         opacity: 1;
         transform: scaleX(0);
         transform-origin: left center;
+      }
+
+      /* Der Endzustand hängt an der Klasse, nicht am Durchlaufen der
+         Animation. Bleibt die aus – aus welchem Grund auch immer – ist das
+         Element trotzdem sichtbar, statt auf Opazität 0 hängenzubleiben. */
+      .js-anim .reveal.is-in {
+        opacity: 1;
+      }
+
+      .js-anim .reveal--wipe.is-in {
+        transform: none;
+      }
+
+      .js-anim .tw.is-in .tw__clip {
+        clip-path: inset(0 0 0 0);
       }
 
       .reveal.is-in {
@@ -980,6 +1022,13 @@
         .wordmark {
           margin-left: 18px;
           margin-right: 18px;
+        }
+
+        /* Auf dem Handy füllt NOW! die Zeile aus statt die gemeinsame
+           Display-Grösse zu teilen – «NOW!» ist in EB Garamond 400 das
+           2,706-Fache der Schriftgrösse breit (gemessen). */
+        .wordmark {
+          font-size: calc((100vw - 36px) / 2.72);
         }
 
         /* Besetzung bleibt zweispaltig, nur enger gesetzt */
