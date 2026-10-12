@@ -37,6 +37,39 @@
       rel="stylesheet"
     />
 
+    <script>
+      // Blendet die Startzustände der .reveal-Elemente erst ein, nachdem
+      // der IntersectionObserver steht – scheitert etwas davor, bleibt die
+      // Seite unverändert sichtbar. Läuft im <head>, damit nichts aufblitzt.
+      (function () {
+        try {
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          if (!("IntersectionObserver" in window)) return;
+
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                e.target.classList.add("is-in");
+                io.unobserve(e.target);
+              });
+            },
+            { rootMargin: "0px 0px -10% 0px" }
+          );
+
+          document.documentElement.classList.add("js-anim");
+
+          document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".reveal").forEach(function (el) {
+              io.observe(el);
+            });
+          });
+        } catch (e) {
+          document.documentElement.classList.remove("js-anim");
+        }
+      })();
+    </script>
+
     <style>
       /* ===============================================================
          1 · TOKENS
@@ -112,6 +145,9 @@
            so gilt dieselbe Rechnung auch im Hero, der keinen Container hat. */
         --fs-display: calc((100vw - 2 * var(--gutter)) / 7.7);
         --wordmark-descender: 0.3em; /* Unterlänge unter der Grundlinie */
+        /* gemessene Breite von «Melody Factory» in EB Garamond 400,
+           als Vielfaches der Schriftgrösse – steuert Caret und Tippweg */
+        --wordmark-width: 6.09em;
 
         /* ── Zeilenlänge ────────────────────────────────────────── */
         --measure: 54ch; /* Infos-Spalte */
@@ -125,7 +161,9 @@
            statt wie eine Abfolge. */
         --fade-dur: 500ms; /* Einblenden einer Hero-Zeile */
         --fade-delay: 300ms; /* Vorlauf, bis das Bild steht */
-        --stagger: 240ms; /* Versatz von Zeile zu Zeile */
+        --stagger: 240ms; /* Versatz von Zeile zu Zeile im Hero */
+        --stagger-fine: 70ms; /* Versatz innerhalb eines Textblocks */
+        --type-dur: 1100ms; /* Tippdauer der Footer-Wortmarke */
         /* Hub beim Einblenden. Als Länge, nicht in em – sonst würde die
            Wortmarke um 120px springen und die Kleinschrift um 10. */
         --fade-shift: clamp(12px, 1.4vw, 20px);
@@ -228,19 +266,31 @@
          --fade-shift hochsteigen. Zwei Arten, sie auszulösen:
 
          .on-load   läuft beim Laden, Reihenfolge über --i
-         .reveal    läuft, wenn das Element in den Viewport eintritt
+         .reveal    läuft, sobald das Element im Viewport steht – was beim
+                    Laden sofort sichtbar ist, startet also sofort
 
-         wipe-in zieht Linien und Flächen von links auf. */
+         wipe-in zieht Linien von links auf, type-in tippt die Wortmarke.
+
+         Der Startzustand hängt an .js-anim, das ein Skript im <head> erst
+         setzt, nachdem der IntersectionObserver steht. Ohne JS, ohne
+         Observer oder bei prefers-reduced-motion bleibt alles sichtbar. */
       @keyframes fade-up {
         from {
           opacity: 0;
           transform: translate3d(0, var(--fade-shift), 0);
+        }
+        to {
+          opacity: 1;
+          transform: none;
         }
       }
 
       @keyframes wipe-in {
         from {
           transform: scaleX(0);
+        }
+        to {
+          transform: none;
         }
       }
 
@@ -254,21 +304,125 @@
         transform-origin: left center;
       }
 
-      /* Scroll-getrieben, daher nur wo unterstützt. Ohne Unterstützung
-         bleibt alles sichtbar – deshalb bewusst kein JS-Rückfall: ein
-         Fehler dort würde Inhalt unsichtbar machen. */
-      @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: view()) {
-          .reveal {
-            animation: fade-up var(--fade-dur) var(--ease) both;
-            animation-timeline: view();
-            animation-range: entry 10% entry 70%;
-          }
+      .js-anim .reveal {
+        opacity: 0;
+      }
 
-          .reveal--wipe {
-            animation-name: wipe-in;
-            transform-origin: left center;
-          }
+      .js-anim .reveal--wipe {
+        opacity: 1;
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
+
+      .reveal.is-in {
+        animation: fade-up var(--fade-dur) var(--ease) both;
+        animation-delay: calc(var(--i, 0) * var(--stagger-fine));
+      }
+
+      .reveal--wipe.is-in {
+        animation-name: wipe-in;
+      }
+
+      /* leichter Versatz innerhalb eines Blocks, damit die Zeilen eines
+         Blocks nicht alle gleichzeitig aufblenden */
+      .facts .fact:nth-child(2) {
+        --i: 1;
+      }
+      .facts .fact:nth-child(3) {
+        --i: 2;
+      }
+      .facts .fact:nth-child(4) {
+        --i: 3;
+      }
+      .facts .fact:nth-child(5) {
+        --i: 4;
+      }
+      .facts .fact:nth-child(6) {
+        --i: 5;
+      }
+      .facts .fact:nth-child(7) {
+        --i: 6;
+      }
+
+      /* Fliesstextblöcke steigen flacher auf als die Überschriften */
+      .fact,
+      .infos__text,
+      .infos__outro,
+      .cta__meta {
+        --fade-shift: clamp(8px, 0.8vw, 12px);
+      }
+
+      /* --- Schreibmaschine ---------------------------------------------
+         Die Wortmarke wird in 14 Schritten freigegeben, einer je Zeichen.
+         Freigegeben wird per clip-path, nicht per Breite: so behält das
+         Element seine Layoutbreite und die zentrierte Zeile wandert nicht
+         während des Tippens. Das Caret liegt daneben und wird deshalb
+         nicht mitgeclippt. */
+      .tw {
+        display: inline-block;
+        position: relative;
+      }
+
+      .tw__clip {
+        display: inline-block;
+        white-space: nowrap;
+        /* zwingend: clip-path beschneidet auf die Box, und die endet wegen
+           line-height 0.74 auf der Grundlinie. Ohne diese Reserve schneidet
+           die Schreibmaschine die Unterlängen der y ab. */
+        padding-bottom: var(--wordmark-descender);
+      }
+
+      .js-anim .tw {
+        opacity: 1; /* nicht ausblenden – nur zuclippen */
+      }
+
+      .js-anim .tw .tw__clip {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      .tw.is-in {
+        animation: none;
+      }
+
+      .tw.is-in .tw__clip {
+        animation: type-in var(--type-dur) steps(14) both;
+      }
+
+      .tw.is-in::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.08em;
+        width: 0.045em;
+        height: 0.72em;
+        background: currentColor;
+        animation: caret-move var(--type-dur) steps(14) both,
+          caret-blink 700ms steps(1) 4 forwards;
+      }
+
+      @keyframes type-in {
+        from {
+          clip-path: inset(0 100% 0 0);
+        }
+        to {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+
+      @keyframes caret-move {
+        to {
+          transform: translateX(var(--wordmark-width));
+        }
+      }
+
+      @keyframes caret-blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
         }
       }
 
@@ -937,16 +1091,16 @@
       <section class="section cols">
         <div class="col">
           <h3 class="h-serif col__title reveal">Zeit / Ort</h3>
-          <div class="facts reveal">
-            <p class="fact">
+          <div class="facts">
+            <p class="fact reveal">
               <span class="fact__label">Dauer</span>
               <span class="fact__value">1 Std. 10 Min. ohne Pause</span>
             </p>
-            <p class="fact">
+            <p class="fact reveal">
               <span class="fact__label">Ort</span>
               <span class="fact__value">KKL Luzern, Auditorium</span>
             </p>
-            <p class="fact">
+            <p class="fact reveal">
               <span class="fact__label">Weitere Informationen</span>
               <span class="fact__value"
                 >Einlass jeweils 60 Min. vor Vorstellungsbeginn. Rollstuhl und
@@ -958,59 +1112,59 @@
 
         <div class="col">
           <h3 class="h-serif col__title reveal">Besetzung</h3>
-          <div class="cast reveal">
+          <div class="cast">
             <div class="facts">
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Violine</span>
                 <span class="fact__value">Julia Roshko</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Violine</span>
                 <span class="fact__value">S&aacute;ra Zastko</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Viola</span>
                 <span class="fact__value">Leonardo Vezzadini</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Cello</span>
                 <span class="fact__value">Maura Rickenbach</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Trompete</span>
                 <span class="fact__value">Pietro Locati</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Waldhorn</span>
                 <span class="fact__value">Mauro Garc&iacute;a Flores</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Posaune</span>
                 <span class="fact__value">Giovanni Capelli</span>
               </p>
             </div>
             <div class="facts">
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Euphonium</span>
                 <span class="fact__value">Ra&uacute;l Sabiote-S&aacute;nchez</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Keys</span>
                 <span class="fact__value">Alexandr Dudin</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">E-Bass</span>
                 <span class="fact__value">Sophia Haas</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Schlagzeug</span>
                 <span class="fact__value">Jason Nordemann</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Moderator &amp; Gesang</span>
                 <span class="fact__value">Tom Muster</span>
               </p>
-              <p class="fact">
+              <p class="fact reveal">
                 <span class="fact__label">Moderatorin &amp; Gesang</span>
                 <span class="fact__value">Ra&iacute;sa Ierone</span>
               </p>
@@ -1067,7 +1221,9 @@
 
         <hr class="rule reveal reveal--wipe" />
 
-        <p class="footer__wordmark reveal">Melody Factory</p>
+        <p class="footer__wordmark">
+          <span class="tw reveal"><span class="tw__clip">Melody Factory</span></span>
+        </p>
 
         <hr class="rule reveal reveal--wipe" />
 
