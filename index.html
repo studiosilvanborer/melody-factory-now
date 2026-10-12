@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOW! – Melody Factory, KKL Luzern</title>
+    <meta
+      name="description"
+      content="NOW! Music you know. Goosebumps you don't! Melody Factory im KKL Luzern, Auditorium – 7. November 2026, 20:00 Uhr."
+    />
+    <meta name="theme-color" content="#e4017e" />
+
+    <!-- Social-Preview -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_CH" />
+    <meta property="og:title" content="NOW! – Klassik neu erlebt" />
+    <meta
+      property="og:description"
+      content="Beethoven mit Beat. Vivaldi mit Bass. Gershwin mit Gänsehaut. 7. November 2026, 20:00 Uhr, KKL Luzern, Auditorium."
+    />
+    <meta property="og:image" content="background.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Favicon: magentafarbenes Feld mit dem N der Wortmarke -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23e4017e'/%3E%3Ctext x='16' y='24' font-family='Garamond,Georgia,serif' font-size='26' text-anchor='middle' fill='%23000'%3EN%3C/text%3E%3C/svg%3E"
+    />
+
+    <!-- Myriad Pro (Adobe Typekit) -->
+    <link rel="stylesheet" href="https://use.typekit.net/wgo3fee.css" />
+    <!-- Garamond (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===============================================================
+         1 · TOKENS
+         Entwurfsraster 1440 × 1024.
+         Zwei Massstäbe, weil die Seite aus zwei Teilen besteht:
+
+         --k  Hero: ein Design-Pixel, begrenzt durch Breite *und* Höhe,
+              damit die Plakatkomposition immer in einen Screen passt.
+         vw   Scrollender Teil: fluide Skalen, nur breitenabhängig.
+              <designpx> / 1440 * 100 = vw-Wert. Jede Stufe ist
+              clamp(Minimum, fluide, Maximum @1440).
+         =============================================================== */
+      :root {
+        /* ── Farbe ──────────────────────────────────────────────── */
+        --pink: #e4017e; /* Melody-Factory-Magenta, aus dem Flyer gemessen */
+        --black: #000;
+        --white: #fff;
+
+        /* ── Schrift ────────────────────────────────────────────── */
+        --sans: "myriad-pro", "Myriad Pro", "Helvetica Neue", Arial, sans-serif;
+        --serif: "EB Garamond", "Adobe Garamond Pro", Garamond, "Times New Roman",
+          serif;
+
+        /* ── Hero-Raster ────────────────────────────────────────── */
+        --k: clamp(0.7px, min(0.0694vw, 0.0977svh), 1.35px);
+
+        /* ── Typo-Skala · modular 1.25 ab 21 px ─────────────────── */
+        --fs--1: clamp(12px, 1.181vw, 17px); /* Kleingedrucktes      */
+        --fs-0: clamp(16px, 1.458vw, 21px); /*  Fliesstext          */
+        --fs-1: clamp(17px, 1.806vw, 26px); /*  Lead                */
+        --fs-2: clamp(19px, 2.292vw, 33px);
+        --fs-3: clamp(21px, 2.847vw, 41px);
+        --fs-4: clamp(24px, 3.542vw, 51px); /*  Footer-Call-to-Action */
+        --fs-5: clamp(30px, 4.444vw, 64px); /*  Spaltentitel        */
+        --fs-6: clamp(34px, 5.556vw, 80px);
+        --fs-7: clamp(38px, 6.944vw, 100px);
+        --fs-8: clamp(40px, 8.681vw, 125px); /* Sektionstitel       */
+        /* Die Wortmarke steht ausserhalb der Skala: sie wird optisch
+           auf die Spaltenbreite eingepasst – siehe --wordmark-fit. */
+
+        /* ── Abstandsskala · ×1.5 ab 8 px ───────────────────────── */
+        --sp-3xs: clamp(6px, 0.556vw, 8px);
+        --sp-2xs: clamp(8px, 0.833vw, 12px);
+        --sp-xs: clamp(12px, 1.25vw, 18px);
+        --sp-s: clamp(16px, 1.875vw, 27px);
+        --sp-m: clamp(22px, 2.778vw, 40px);
+        --sp-l: clamp(30px, 4.167vw, 60px);
+        --sp-xl: clamp(40px, 6.25vw, 90px);
+        --sp-2xl: clamp(52px, 9.375vw, 135px);
+        --section: clamp(44px, 8.3vw, 120px); /* Rhythmus zwischen Sektionen */
+
+        /* ── Raster & Linien ────────────────────────────────────── */
+        --gutter: clamp(18px, 4.2vw, 61px); /* seitlicher Seitenrand */
+        --rule-w: clamp(2px, 0.25vw, 3px); /* Trennlinie aus dem Flyer */
+        --underline-w: clamp(1px, 0.2vw, 2px); /* Hover-Unterstrich */
+        --radius-pill: 999px;
+        --radius-frame: clamp(10px, 1.528vw, 22px);
+
+        /* ── Display-Grösse ─────────────────────────────────────────
+           Eine gemeinsame Grösse für die drei grossen Zeilen: NOW!,
+           «Klassik neu erlebt.» und «Melody Factory».
+
+           Bemessen an der längsten: «Klassik neu erlebt.» ist in
+           EB Garamond 600 das 7,555-Fache der Schriftgrösse breit
+           (gemessen). Durch 7,6 geteilt füllt sie die Spalte randvoll,
+           mit einem Hauch Sicherheitsabstand. Bei 1440 ergibt das 174px.
+
+           Die beiden kürzeren Zeilen stehen damit schmaler als die Spalte:
+           «Melody Factory» auf 80%, «NOW!» auf 36%.
+
+           Durch 7,7 statt 7,6, weil 100vw die Scrollbar mitzählt – die
+           knappe Reserve fängt das ab. Bewusst in vw und nicht in cqi:
+           so gilt dieselbe Rechnung auch im Hero, der keinen Container hat. */
+        --fs-display: calc((100vw - 2 * var(--gutter)) / 7.7);
+        --wordmark-descender: 0.3em; /* Unterlänge unter der Grundlinie */
+
+        /* ── Zeilenlänge ────────────────────────────────────────── */
+        --measure: 54ch; /* Infos-Spalte */
+        --measure-wide: 76ch; /* zentrierter Lead */
+
+        /* ── Bewegung ───────────────────────────────────────────── */
+        --dur: 180ms;
+        --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+        /* Der Versatz muss rund die Hälfte der Dauer betragen, sonst
+           laufen zu viele Zeilen gleichzeitig und es wirkt wie ein Block
+           statt wie eine Abfolge. */
+        --fade-dur: 500ms; /* Einblenden einer Hero-Zeile */
+        --fade-delay: 300ms; /* Vorlauf, bis das Bild steht */
+        --stagger: 240ms; /* Versatz von Zeile zu Zeile */
+        /* Hub beim Einblenden. Als Länge, nicht in em – sonst würde die
+           Wortmarke um 120px springen und die Kleinschrift um 10. */
+        --fade-shift: clamp(12px, 1.4vw, 20px);
+        /* Nachlauf des Hero-Bildes über die volle Hero-Höhe.
+           18svh von 100svh = das Bild scrollt mit 82 % der Seitengeschwindigkeit.
+           Achtung: der JS-Rückfall unten muss denselben Faktor benutzen. */
+        --parallax: 18svh;
+      }
+
+      /* ===============================================================
+         2 · GRUNDLAGEN
+         =============================================================== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        /* clip statt hidden: kappt seitlichen Überlauf, erzeugt aber
+           keinen zusätzlichen Scroll-Container (kein Scroll-Ruckeln) */
+        overflow-x: clip;
+      }
+
+      body {
+        background: var(--black);
+        color: var(--pink);
+        font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* Fokusring nimmt die Farbe des jeweiligen Abschnitts an */
+      :focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 3px;
+      }
+
+      ::selection {
+        background: var(--pink);
+        color: var(--black);
+      }
+
+      .page ::selection {
+        background: var(--black);
+        color: var(--pink);
+      }
+
+      /* ===============================================================
+         3 · KOMPONENTEN
+         =============================================================== */
+
+      /* Serif-Titel – ein Satz Regeln für alle Überschriften */
+      .h-serif {
+        font-family: var(--serif);
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0.005em;
+        text-wrap: balance;
+        margin: 0;
+      }
+
+      /* Pillen-Button.
+         Grösse ergibt sich allein aus font-size (em-basiert),
+         Farbe aus der Fläche, auf der er liegt:
+         dunkel → magenta Pille, magenta → schwarze Pille. */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 1.62em;
+        padding: 0 1.06em;
+        border-radius: var(--radius-pill);
+        background: var(--btn-bg);
+        color: var(--btn-fg);
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+        transition: background-color var(--dur) var(--ease),
+          color var(--dur) var(--ease);
+      }
+
+      .btn:hover,
+      .btn:focus-visible {
+        background: var(--white);
+        color: var(--black);
+      }
+
+      /* --- Einblenden -------------------------------------------------
+         fade-up ist die eine Bewegung der Seite: aufblenden und dabei um
+         --fade-shift hochsteigen. Zwei Arten, sie auszulösen:
+
+         .on-load   läuft beim Laden, Reihenfolge über --i
+         .reveal    läuft, wenn das Element in den Viewport eintritt
+
+         wipe-in zieht Linien und Flächen von links auf. */
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translate3d(0, var(--fade-shift), 0);
+        }
+      }
+
+      @keyframes wipe-in {
+        from {
+          transform: scaleX(0);
+        }
+      }
+
+      .on-load {
+        animation: fade-up var(--fade-dur) var(--ease) both;
+        animation-delay: calc(var(--fade-delay) + var(--i, 0) * var(--stagger));
+      }
+
+      .on-load--wipe {
+        animation-name: wipe-in;
+        transform-origin: left center;
+      }
+
+      /* Scroll-getrieben, daher nur wo unterstützt. Ohne Unterstützung
+         bleibt alles sichtbar – deshalb bewusst kein JS-Rückfall: ein
+         Fehler dort würde Inhalt unsichtbar machen. */
+      @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+          .reveal {
+            animation: fade-up var(--fade-dur) var(--ease) both;
+            animation-timeline: view();
+            animation-range: entry 10% entry 70%;
+          }
+
+          .reveal--wipe {
+            animation-name: wipe-in;
+            transform-origin: left center;
+          }
+        }
+      }
+
+      /* Haarlinie – das Gliederungselement vom Flyer */
+      .rule {
+        border: 0;
+        border-top: var(--rule-w) solid currentColor;
+        /* der Browser setzt <hr> von sich aus auf Grau – zurück auf die
+           Textfarbe der Fläche, damit die Linie überall mitläuft */
+        color: inherit;
+        margin: var(--sp-s) 0;
+      }
+
+      /* Nur für Screenreader */
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      /* Sprungmarke für Tastatur- und Screenreader-Nutzung */
+      .skip-link {
+        position: absolute;
+        z-index: 10;
+        top: calc(10 * var(--k));
+        left: calc(42 * var(--k));
+        padding: 0.5em 1em;
+        background: var(--pink);
+        color: var(--black);
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: var(--radius-pill);
+        transform: translateY(-200%);
+        transition: transform var(--dur) var(--ease);
+      }
+
+      .skip-link:focus-visible {
+        transform: translateY(0);
+      }
+
+      /* ===============================================================
+         4 · HERO
+         Die Zahlen hier sind am Entwurf gemessen und bewusst nicht auf
+         die Skala gerundet – die Komposition ist pixelgenau gesetzt.
+         =============================================================== */
+      .hero {
+        --btn-bg: var(--pink); /* dunkle Fläche → magenta Pille */
+        --btn-fg: var(--black);
+        position: relative;
+        width: 100%;
+        height: 100svh; /* svh statt dvh: Höhe bleibt beim Scrollen stabil */
+        overflow: clip;
+      }
+
+      .hero__bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 28%;
+        z-index: 0;
+      }
+
+      /* Das Bild läuft dem Scrollen hinterher, als läge es etwas weiter
+         hinten. Bevorzugt als scroll-getriebene Animation: die läuft im
+         Compositor und belastet den Hauptthread nicht.
+         Eine Lücke kann dabei nicht entstehen – das Bild wandert immer
+         langsamer nach unten, als der Hero aus dem Bild scrollt. */
+      @keyframes hero-parallax {
+        to {
+          transform: translate3d(0, var(--parallax), 0);
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: scroll()) {
+          .hero__bg {
+            will-change: transform;
+            animation: hero-parallax linear both;
+            animation-timeline: scroll(root block);
+            animation-range: 0 100svh;
+          }
+        }
+      }
+
+      /* subtiler Verlauf – nur dort, wo das Layout das Foto bedrängt */
+      .hero__scrim {
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 72%;
+        z-index: 1;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 35%,
+          rgba(0, 0, 0, 0.5) 65%,
+          rgba(0, 0, 0, 0.65) 100%
+        );
+      }
+
+      .header {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: calc(24 * var(--k));
+        padding: calc(29 * var(--k)) calc(35 * var(--k)) 0 calc(42 * var(--k));
+      }
+
+      /* Ladesequenz: erst die Kopfzeile, dann die Wortmarke,
+         danach die sechs Meta-Zeilen (--i 0 bis 5) */
+      .logo {
+        --i: -1;
+      }
+
+      .nav {
+        --i: -0.5;
+      }
+
+      .wordmark,
+      .bar {
+        --i: -0.5;
+      }
+
+      .logo {
+        font-family: var(--serif);
+        font-weight: 500;
+        font-size: calc(21 * var(--k));
+        line-height: 1;
+        letter-spacing: 0.12em;
+        margin-top: calc(-2 * var(--k));
+        white-space: nowrap;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: calc(13 * var(--k));
+      }
+
+      .nav .btn {
+        font-size: calc(19.8 * var(--k));
+      }
+
+      /* --- untere Komposition (Meta-Block, Wortmarke, Magentabalken) -- */
+      .lower {
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      .meta {
+        position: relative;
+        height: calc(129 * var(--k)); /* Entwurf y 562 → 691 */
+        margin: 0 calc(35 * var(--k)) 0 calc(44 * var(--k));
+        font-size: calc(23.2 * var(--k));
+        font-weight: 700;
+        line-height: 1;
+        /* weicher Schatten statt Kasten: hebt die magenta Schrift vom
+           Foto ab, ohne als Fläche sichtbar zu werden */
+        text-shadow: 0 calc(1 * var(--k)) calc(18 * var(--k)) rgba(0, 0, 0, 0.75);
+      }
+
+      .meta span {
+        position: absolute;
+        white-space: nowrap;
+        --fade-shift: 0.6em; /* bei der Meta-Zeile zur Schrift proportional */
+      }
+
+      .m-break {
+        display: none;
+      }
+
+      /* Offsets in Entwurfs-Pixeln, gemessen ab Oberkante .meta (y = 562) */
+      .m-venue {
+        --i: 2;
+        top: 0;
+        /* proportional verankert, damit der Mittelcluster auch auf sehr
+           breiten Viewports mittig bleibt */
+        left: 34.5%;
+      }
+      .m-claim-1 {
+        --i: 0;
+        top: calc(29 * var(--k));
+        left: calc(8 * var(--k));
+      }
+      .m-city {
+        --i: 3;
+        top: calc(30 * var(--k));
+        right: calc(15 * var(--k));
+      }
+      .m-claim-2 {
+        --i: 1;
+        top: calc(69 * var(--k));
+        left: calc(72 * var(--k));
+      }
+      .m-time {
+        --i: 5;
+        top: calc(69 * var(--k));
+        right: calc(140 * var(--k));
+      }
+      .m-date {
+        --i: 4;
+        top: calc(100 * var(--k));
+        left: 55.5%;
+      }
+
+      .wordmark {
+        display: block;
+        font-family: var(--serif);
+        --fade-shift: clamp(16px, 2vw, 28px);
+        font-weight: 400;
+        font-size: var(--fs-display);
+        line-height: 0.66; /* Versalhöhen-Box */
+        letter-spacing: 0.005em;
+        margin: 0 0 calc(68 * var(--k)) calc(52 * var(--k));
+      }
+
+      .bar {
+        height: calc(69 * var(--k));
+        background: var(--pink);
+      }
+
+      /* ===============================================================
+         5 · SCROLLENDER TEIL
+         Magentafläche, schwarze Schrift. Sektionen stehen in einem
+         Flow mit festem Rhythmus (--section), alles andere kommt aus
+         der Abstands- und Typoskala.
+         =============================================================== */
+      .page {
+        --btn-bg: var(--black); /* magenta Fläche → schwarze Pille */
+        --btn-fg: var(--pink);
+        display: flex;
+        flex-direction: column;
+        gap: var(--section);
+        padding-top: var(--sp-xl);
+        background: var(--pink);
+        color: var(--black);
+        font-size: var(--fs-0);
+        line-height: 1.5;
+      }
+
+      .section {
+        padding: 0 var(--gutter);
+        scroll-margin-top: var(--sp-m);
+      }
+
+      /* --- Intro ----------------------------------------------------- */
+      .intro {
+        text-align: center;
+      }
+
+      .intro__title {
+        font-size: var(--fs-display);
+      }
+
+      .intro__lead {
+        max-width: var(--measure-wide);
+        margin: var(--sp-m) auto 0;
+        font-size: var(--fs-1);
+        text-wrap: pretty;
+      }
+
+      .intro__lead em {
+        font-style: italic;
+      }
+
+      /* --- Zweispaltige Blöcke ---------------------------------------- */
+      .cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: var(--sp-xl);
+        align-items: start;
+      }
+
+      .col__title {
+        font-size: var(--fs-5);
+        margin-bottom: var(--sp-s);
+      }
+
+      /* Label-/Wert-Paare – ein Muster für Zeit/Ort und Besetzung */
+      .facts {
+        margin: 0;
+      }
+
+      .fact {
+        margin: 0 0 var(--sp-xs);
+      }
+
+      .fact:last-child {
+        margin-bottom: 0;
+      }
+
+      .fact__label {
+        display: block;
+        font-weight: 400;
+      }
+
+      .fact__value {
+        display: block;
+        font-weight: 700;
+      }
+
+      /* Besetzung: zwei Unterspalten */
+      .cast {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: var(--sp-m);
+      }
+
+      /* --- Infos / Trailer -------------------------------------------- */
+      .infos__text {
+        max-width: var(--measure);
+        margin: 0;
+        text-wrap: pretty;
+      }
+
+      .infos__outro {
+        margin: var(--sp-s) 0 0;
+      }
+
+      .trailer__frame {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: var(--rule-w) solid currentColor;
+        border-radius: var(--radius-frame);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .trailer__frame::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-40%, -50%);
+        border-style: solid;
+        border-width: var(--sp-s) 0 var(--sp-s) var(--sp-m);
+        border-color: transparent transparent transparent currentColor;
+        transition: transform var(--dur) var(--ease);
+      }
+
+      a.trailer__frame:hover::after,
+      a.trailer__frame:focus-visible::after {
+        transform: translate(-40%, -50%) scale(1.08);
+      }
+
+      .trailer__frame video,
+      .trailer__frame iframe,
+      .trailer__frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border: 0;
+        display: block;
+      }
+
+      /* --- Footer ------------------------------------------------------ */
+      .footer {
+        position: relative;
+        padding: var(--sp-l) var(--gutter) var(--sp-m);
+      }
+
+      /* Ticket-Aufruf, übernommen von der Flyer-Rückseite */
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--sp-s) var(--sp-m);
+      }
+
+      .cta__title {
+        font-size: var(--fs-4);
+      }
+
+      .cta__meta {
+        margin: var(--sp-2xs) 0 0;
+      }
+
+      .cta .btn {
+        font-size: var(--fs-1);
+      }
+
+      /* alle sechs Links in einer Zeile, in drei Paaren gruppiert */
+      .footer__links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: var(--sp-xs) var(--sp-m);
+      }
+
+      .linkgroup {
+        display: flex;
+        gap: var(--sp-s);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .footer__links a {
+        border-bottom: var(--underline-w) solid transparent;
+        transition: border-color var(--dur) var(--ease);
+      }
+
+      .footer__links a:hover,
+      .footer__links a:focus-visible {
+        border-bottom-color: currentColor;
+      }
+
+      .footer__wordmark {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: var(--fs-display);
+        line-height: 0.74; /* Versalhöhen-Box: Grundlinie sitzt unten */
+        /* Platz für die Unterlänge des y – sonst schneidet der
+           Seitenrand sie ab */
+        padding-bottom: var(--wordmark-descender);
+        letter-spacing: 0.005em;
+        text-align: center;
+        white-space: nowrap;
+        margin: var(--sp-l) 0 0;
+      }
+
+      /* Die Linie unter der Wortmarke sitzt unterhalb der Unterlängen –
+         dafür sorgt deren padding-bottom. */
+      .footer__wordmark + .rule {
+        margin-top: var(--sp-s);
+      }
+
+      .footer__legal {
+        font-size: var(--fs--1);
+        line-height: 1.2;
+        margin: var(--sp-s) 0 0;
+      }
+
+      /* ===============================================================
+         6 · ABWEICHUNGEN FÜR SCHMALE VIEWPORTS
+         Dank der fluiden Skalen bleiben nur echte Layoutwechsel übrig.
+         =============================================================== */
+      @media (max-width: 900px) {
+        .hero__bg {
+          object-position: 48% 20%;
+        }
+
+        .header {
+          flex-wrap: wrap;
+          padding: 22px 20px 0;
+          gap: 16px;
+        }
+
+        .logo {
+          font-size: 17px;
+          margin-top: 4px;
+          letter-spacing: 0.14em;
+        }
+
+        .nav {
+          gap: 8px;
+        }
+
+        .nav .btn {
+          font-size: 14px;
+        }
+
+        /* Meta-Block wird zum lesbaren Stapel über der Wortmarke */
+        .meta {
+          position: static;
+          height: auto;
+          margin: 0 20px 14px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          gap: 4px 16px;
+          font-size: 17px;
+          line-height: 1.25;
+        }
+
+        .meta span {
+          position: static;
+          white-space: nowrap;
+        }
+
+        /* Claim-Zeilen stehen je für sich, die Boxen laufen frei weiter */
+        .m-claim-1,
+        .m-claim-2 {
+          flex: 0 0 100%;
+          white-space: normal;
+        }
+
+        .m-claim-2 {
+          margin-bottom: 7px;
+        }
+
+        /* erzwingt den Umbruch vor dem Datum, unabhängig von der Textlänge */
+        .m-break {
+          display: block;
+          flex: 0 0 100%;
+          height: 0;
+        }
+
+        .wordmark {
+          line-height: 0.7;
+          margin: 0 20px 12px;
+        }
+
+        .bar {
+          height: 34px;
+        }
+
+        /* Sektionen einspaltig */
+        .cols {
+          grid-template-columns: minmax(0, 1fr);
+          row-gap: var(--sp-l);
+        }
+
+        .infos__text {
+          max-width: none;
+        }
+
+        /* lange deutsche Komposita in schmalen Spalten trennen */
+        .infos__text,
+        .fact__value {
+          hyphens: auto;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 18px 18px 0;
+        }
+
+        .nav {
+          flex-wrap: wrap;
+        }
+
+        .meta,
+        .wordmark {
+          margin-left: 18px;
+          margin-right: 18px;
+        }
+
+        /* Besetzung bleibt zweispaltig, nur enger gesetzt */
+        .cast {
+          column-gap: var(--sp-xs);
+          font-size: 0.9em;
+        }
+
+        /* Gruppen auflösen: sechs Links gleichmässig in einer Zeile */
+        .linkgroup {
+          display: contents;
+        }
+
+        .footer__links {
+          column-gap: 2.2vw;
+          row-gap: var(--sp-2xs);
+          font-size: clamp(10px, 2.9vw, 15px);
+        }
+
+        .cta {
+          align-items: flex-start;
+        }
+      }
+
+      /* sehr flache Querformat-Handys */
+      @media (max-height: 520px) and (max-width: 900px) {
+        .meta {
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+        .wordmark {
+          margin-bottom: 8px;
+        }
+        .bar {
+          height: 24px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+          animation-duration: 1ms !important;
+          animation-delay: 0ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#programm">Zum Inhalt springen</a>
+
+    <main class="hero">
+      <img
+        class="hero__bg"
+        src="background.png"
+        alt="Zwei Musiker:innen der Melody Factory mit Tuba, Violine und Schlagzeug im dunklen Studiolicht"
+        fetchpriority="high"
+      />
+      <div class="hero__scrim" aria-hidden="true"></div>
+
+      <header class="header">
+        <a class="logo on-load" href="/">MELODY FACTORY</a>
+        <nav class="nav on-load" aria-label="Hauptnavigation">
+          <a
+            class="btn"
+            href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
+            target="_blank"
+            rel="noopener"
+            >Tickets</a
+          >
+          <a class="btn" href="#programm">Kalender</a>
+        </nav>
+      </header>
+
+      <div class="lower">
+        <p class="meta">
+          <span class="on-load m-claim-1" lang="en">Music you know.</span>
+          <span class="on-load m-claim-2" lang="en">Goosebumps you don&rsquo;t!</span>
+          <span class="on-load m-venue">KKL, Auditorium</span>
+          <span class="on-load m-city">Luzern</span>
+          <span class="m-break" aria-hidden="true"></span>
+          <span class="on-load m-date">7. November 2026</span>
+          <span class="on-load m-time">20:00 Uhr</span>
+        </p>
+
+        <h1 class="wordmark on-load">NOW!</h1>
+
+        <div class="bar on-load on-load--wipe"></div>
+      </div>
+    </main>
+
+    <div class="page">
+      <!-- Intro ------------------------------------------------------ -->
+      <section class="section intro" id="programm">
+        <h2 class="h-serif intro__title reveal">Klassik neu erlebt.</h2>
+        <p class="intro__lead reveal">
+          <em>Beethoven</em> mit Beat. <em>Vivaldi</em> mit Bass.
+          <em>Gershwin</em> mit G&auml;nsehaut.<br />
+          Studierende der Hochschule Luzern bringen die bekanntesten Melodien der
+          Musikgeschichte ins KKL, mit Schlagzeug und E-Bass. Erz&auml;hlt wird
+          die gr&ouml;sste Liebesgeschichte aller Zeiten: Romeo und Julia. Liebe,
+          Drama und Herzschmerz, live auf der grossen B&uuml;hne.
+        </p>
+      </section>
+
+      <!-- Zeit / Ort  +  Besetzung ----------------------------------- -->
+      <section class="section cols">
+        <div class="col">
+          <h3 class="h-serif col__title reveal">Zeit / Ort</h3>
+          <div class="facts reveal">
+            <p class="fact">
+              <span class="fact__label">Dauer</span>
+              <span class="fact__value">1 Std. 10 Min. ohne Pause</span>
+            </p>
+            <p class="fact">
+              <span class="fact__label">Ort</span>
+              <span class="fact__value">KKL Luzern, Auditorium</span>
+            </p>
+            <p class="fact">
+              <span class="fact__label">Weitere Informationen</span>
+              <span class="fact__value"
+                >Einlass jeweils 60 Min. vor Vorstellungsbeginn. Rollstuhl und
+                Begleitpl&auml;tze online erh&auml;ltlich.</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="col">
+          <h3 class="h-serif col__title reveal">Besetzung</h3>
+          <div class="cast reveal">
+            <div class="facts">
+              <p class="fact">
+                <span class="fact__label">Violine</span>
+                <span class="fact__value">Julia Roshko</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Violine</span>
+                <span class="fact__value">S&aacute;ra Zastko</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Viola</span>
+                <span class="fact__value">Leonardo Vezzadini</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Cello</span>
+                <span class="fact__value">Maura Rickenbach</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Trompete</span>
+                <span class="fact__value">Pietro Locati</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Waldhorn</span>
+                <span class="fact__value">Mauro Garc&iacute;a Flores</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Posaune</span>
+                <span class="fact__value">Giovanni Capelli</span>
+              </p>
+            </div>
+            <div class="facts">
+              <p class="fact">
+                <span class="fact__label">Euphonium</span>
+                <span class="fact__value">Ra&uacute;l Sabiote-S&aacute;nchez</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Keys</span>
+                <span class="fact__value">Alexandr Dudin</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">E-Bass</span>
+                <span class="fact__value">Sophia Haas</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Schlagzeug</span>
+                <span class="fact__value">Jason Nordemann</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Moderator &amp; Gesang</span>
+                <span class="fact__value">Tom Muster</span>
+              </p>
+              <p class="fact">
+                <span class="fact__label">Moderatorin &amp; Gesang</span>
+                <span class="fact__value">Ra&iacute;sa Ierone</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Infos  +  Trailer ------------------------------------------ -->
+      <section class="section cols">
+        <div class="col">
+          <h3 class="h-serif col__title reveal">Infos</h3>
+          <p class="infos__text reveal">
+            <strong>Musik, die du kennst. G&auml;nsehaut, mit der du nicht
+            rechnest.</strong> Licht aus. B&uuml;hne schwarz.
+            <strong>Dann: ein einziger Lichtstrahl. Schlagzeug. E-Bass.
+            Trompete.</strong> Und noch so viel mehr, das im Dunkeln wartet.
+            <strong>Es geht los.</strong> Beethoven. Vivaldi. Gershwin.
+            <strong>Musik, die du zu kennen glaubst. Doch so hast du sie noch nie
+            geh&ouml;rt.</strong> Und pl&ouml;tzlich geht jeder Ton unter die
+            Haut. <strong>Musik, Bewegung und Licht erz&auml;hlen eine
+            Geschichte.</strong> Von Liebe und Leidenschaft. Von Gl&uuml;ck und
+            Schmerz. <strong>Eine Geschichte, die dich mitreisst und dir das Herz
+            bricht: Romeo und Julia.</strong> Halte den Atem an. Folge der Musik.
+          </p>
+          <p class="infos__outro reveal">Wir sehen uns am 7. November!</p>
+        </div>
+
+        <div class="col">
+          <h3 class="h-serif col__title reveal">Trailer</h3>
+          <div class="trailer__frame reveal">
+            <span class="visually-hidden">Trailer zu NOW! &ndash; folgt in K&uuml;rze.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer ------------------------------------------------------ -->
+      <footer class="footer">
+        <div class="cta reveal">
+          <div>
+            <p class="h-serif cta__title">Hol dir jetzt Tickets!</p>
+            <p class="cta__meta">
+              7. November 2026 &middot; 20:00 Uhr &middot; KKL Luzern, Auditorium
+            </p>
+          </div>
+          <a
+            class="btn"
+            href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
+            target="_blank"
+            rel="noopener"
+            >Tickets</a
+          >
+        </div>
+
+        <hr class="rule reveal reveal--wipe" />
+
+        <p class="footer__wordmark reveal">Melody Factory</p>
+
+        <hr class="rule reveal reveal--wipe" />
+
+        <nav class="footer__links reveal" aria-label="Footer">
+          <ul class="linkgroup">
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">Youtube</a></li>
+          </ul>
+          <ul class="linkgroup">
+            <li><a href="#impressum">Impressum</a></li>
+            <li><a href="#datenschutz">Datenschutz</a></li>
+          </ul>
+          <ul class="linkgroup">
+            <li><a href="mailto:info@melodyfactory.ch">Kontakt</a></li>
+            <li><a href="#newsletter">Newsletter</a></li>
+          </ul>
+        </nav>
+
+        <p class="footer__legal reveal">&copy; 2026 Melody Factory. All rights reserved.</p>
+      </footer>
+    </div>
+    <script>
+      // Rückfall für Browser ohne scroll-getriebene Animationen (Firefox,
+      // ältere Safari). Liest nur scrollY und schreibt nur transform –
+      // beides ohne Layout-Zwang, gebündelt über requestAnimationFrame.
+      (function () {
+        if (CSS.supports("animation-timeline: scroll()")) return;
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        var heroBg = document.querySelector(".hero__bg");
+        if (!heroBg) return;
+
+        var factor = 0.18; // muss zu --parallax passen
+        var queued = false;
+
+        function update() {
+          queued = false;
+          var y = Math.min(window.scrollY, window.innerHeight) * factor;
+          heroBg.style.transform = "translate3d(0," + y + "px,0)";
+        }
+
+        heroBg.style.willChange = "transform";
+        addEventListener(
+          "scroll",
+          function () {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(update);
+          },
+          { passive: true }
+        );
+        update();
+      })();
+    </script>
+  </body>
+</html>
