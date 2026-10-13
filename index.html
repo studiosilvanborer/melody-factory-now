@@ -763,13 +763,36 @@
         padding: var(--sp-l) var(--gutter) var(--sp-s);
       }
 
+      /* Der Kopf des Footers ist in zwei gleiche Hälften geteilt: links
+         die Linkspalte, rechts der Ticket-Aufruf. Die Senkrechte auf der
+         Mittelachse trennt beide und läuft über die volle Höhe der Zeile. */
+      .footer__top {
+        margin-top: var(--sp-l);
+        display: flex;
+        align-items: stretch;
+      }
+
+      /* Alle sechs Links stehen als zentrierte Spalte in der linken Hälfte;
+         deren rechte Kante trägt die Trennlinie. */
+      .footer__links {
+        flex: 0 0 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--sp-xs);
+        padding-right: var(--sp-m);
+        text-align: center;
+        border-right: var(--rule-w) solid currentColor;
+      }
+
       /* Ticket-Aufruf, übernommen von der Flyer-Rückseite */
       .cta {
+        flex: 1 1 0;
         display: flex;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: var(--sp-s) var(--sp-m);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--sp-s);
+        padding-left: var(--sp-m);
       }
 
       .cta__title {
@@ -782,20 +805,6 @@
 
       .cta .btn {
         font-size: var(--fs-2);
-      }
-
-      /* Alle sechs Links stehen als eine zentrierte Spalte in der linken
-         Blatthälfte; die Senkrechte rechts davon liegt damit exakt auf der
-         Mittelachse des Satzspiegels und ist genau so hoch wie der Block. */
-      .footer__links {
-        margin-top: var(--sp-l);
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--sp-xs);
-        text-align: center;
-        border-right: var(--rule-w) solid currentColor;
       }
 
       .linkgroup {
@@ -981,7 +990,13 @@
         /* Linkspalte nur enger gesetzt, Geometrie bleibt */
         .footer__links {
           gap: var(--sp-2xs);
+          padding-right: var(--sp-xs);
           font-size: clamp(12px, 3.4vw, 16px);
+        }
+
+        .cta {
+          gap: var(--sp-xs);
+          padding-left: var(--sp-xs);
         }
 
       }
@@ -1185,36 +1200,38 @@
 
       <!-- Footer ------------------------------------------------------ -->
       <footer class="footer">
-        <div class="cta reveal">
-          <div>
-            <p class="h-serif cta__title">Hol dir jetzt Tickets!</p>
-            <p class="cta__meta">
-              7. November 2026 &middot; 20:00 Uhr &middot; KKL Luzern, Auditorium
-            </p>
-          </div>
-          <a
-            class="btn"
-            href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
-            target="_blank"
-            rel="noopener"
-            >Tickets</a
-          >
-        </div>
+        <div class="footer__top reveal">
+          <nav class="footer__links" aria-label="Footer">
+            <ul class="linkgroup">
+              <li><a href="#impressum">Impressum</a></li>
+              <li><a href="#datenschutz">Datenschutz</a></li>
+            </ul>
+            <ul class="linkgroup">
+              <li><a href="mailto:info@melodyfactory.ch">Kontakt</a></li>
+              <li><a href="#newsletter">Newsletter</a></li>
+            </ul>
+            <ul class="linkgroup">
+              <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+              <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">Youtube</a></li>
+            </ul>
+          </nav>
 
-        <nav class="footer__links reveal" aria-label="Footer">
-          <ul class="linkgroup">
-            <li><a href="#impressum">Impressum</a></li>
-            <li><a href="#datenschutz">Datenschutz</a></li>
-          </ul>
-          <ul class="linkgroup">
-            <li><a href="mailto:info@melodyfactory.ch">Kontakt</a></li>
-            <li><a href="#newsletter">Newsletter</a></li>
-          </ul>
-          <ul class="linkgroup">
-            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
-            <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">Youtube</a></li>
-          </ul>
-        </nav>
+          <div class="cta">
+            <div>
+              <p class="h-serif cta__title">Hol dir jetzt Tickets!</p>
+              <p class="cta__meta">
+                7. November 2026 &middot; 20:00 Uhr &middot; KKL Luzern, Auditorium
+              </p>
+            </div>
+            <a
+              class="btn"
+              href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
+              target="_blank"
+              rel="noopener"
+              >Tickets</a
+            >
+          </div>
+        </div>
 
         <p class="footer__wordmark reveal">Melody Factory</p>
 
