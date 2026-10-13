@@ -758,9 +758,20 @@
       }
 
       /* --- Footer ------------------------------------------------------ */
+      /* Der Seitenfuss kippt die Fläche zurück auf Schwarz und schliesst
+         die Seite damit in derselben Farbgebung, in der sie oben beginnt. */
       .footer {
+        --btn-bg: var(--pink); /* dunkle Fläche → magenta Pille */
+        --btn-fg: var(--black);
         position: relative;
         padding: var(--sp-l) var(--gutter) var(--sp-s);
+        background: var(--black);
+        color: var(--pink);
+      }
+
+      .footer ::selection {
+        background: var(--pink);
+        color: var(--black);
       }
 
       /* Der Kopf des Footers ist in zwei gleiche Hälften geteilt: links
