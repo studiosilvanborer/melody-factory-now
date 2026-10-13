@@ -172,9 +172,6 @@
            so gilt dieselbe Rechnung auch im Hero, der keinen Container hat. */
         --fs-display: calc((100vw - 2 * var(--gutter)) / 7.7);
         --wordmark-descender: 0.3em; /* Unterlänge unter der Grundlinie */
-        /* gemessene Breite von «Melody Factory» in EB Garamond 400,
-           als Vielfaches der Schriftgrösse – steuert Caret und Tippweg */
-        --wordmark-width: 6.09em;
 
         /* ── Zeilenlänge ────────────────────────────────────────── */
         --measure: 54ch; /* Infos-Spalte */
@@ -190,7 +187,6 @@
         --fade-delay: 300ms; /* Vorlauf, bis das Bild steht */
         --stagger: 240ms; /* Versatz von Zeile zu Zeile im Hero */
         --stagger-fine: 70ms; /* Versatz innerhalb eines Textblocks */
-        --type-dur: 1100ms; /* Tippdauer der Footer-Wortmarke */
         /* Hub beim Einblenden. Als Länge, nicht in em – sonst würde die
            Wortmarke um 120px springen und die Kleinschrift um 10. */
         --fade-shift: clamp(12px, 1.4vw, 20px);
@@ -296,7 +292,7 @@
          .reveal    läuft, sobald das Element im Viewport steht – was beim
                     Laden sofort sichtbar ist, startet also sofort
 
-         wipe-in zieht Linien von links auf, type-in tippt die Wortmarke.
+         wipe-in zieht den Magentabalken von links auf.
 
          Der Startzustand hängt an .js-anim, das ein Skript im <head> erst
          setzt, nachdem der IntersectionObserver steht. Ohne JS, ohne
@@ -335,12 +331,6 @@
         opacity: 0;
       }
 
-      .js-anim .reveal--wipe {
-        opacity: 1;
-        transform: scaleX(0);
-        transform-origin: left center;
-      }
-
       /* Der Endzustand hängt an der Klasse, nicht am Durchlaufen der
          Animation. Bleibt die aus – aus welchem Grund auch immer – ist das
          Element trotzdem sichtbar, statt auf Opazität 0 hängenzubleiben. */
@@ -348,21 +338,9 @@
         opacity: 1;
       }
 
-      .js-anim .reveal--wipe.is-in {
-        transform: none;
-      }
-
-      .js-anim .tw.is-in .tw__clip {
-        clip-path: inset(0 0 0 0);
-      }
-
       .reveal.is-in {
         animation: fade-up var(--fade-dur) var(--ease) both;
         animation-delay: calc(var(--i, 0) * var(--stagger-fine));
-      }
-
-      .reveal--wipe.is-in {
-        animation-name: wipe-in;
       }
 
       /* leichter Versatz innerhalb eines Blocks, damit die Zeilen eines
@@ -392,90 +370,6 @@
       .infos__outro,
       .cta__meta {
         --fade-shift: clamp(8px, 0.8vw, 12px);
-      }
-
-      /* --- Schreibmaschine ---------------------------------------------
-         Die Wortmarke wird in 14 Schritten freigegeben, einer je Zeichen.
-         Freigegeben wird per clip-path, nicht per Breite: so behält das
-         Element seine Layoutbreite und die zentrierte Zeile wandert nicht
-         während des Tippens. Das Caret liegt daneben und wird deshalb
-         nicht mitgeclippt. */
-      .tw {
-        display: inline-block;
-        position: relative;
-      }
-
-      .tw__clip {
-        display: inline-block;
-        white-space: nowrap;
-        /* zwingend: clip-path beschneidet auf die Box, und die endet wegen
-           line-height 0.74 auf der Grundlinie. Ohne diese Reserve schneidet
-           die Schreibmaschine die Unterlängen der y ab. */
-        padding-bottom: var(--wordmark-descender);
-      }
-
-      .js-anim .tw {
-        opacity: 1; /* nicht ausblenden – nur zuclippen */
-      }
-
-      .js-anim .tw .tw__clip {
-        clip-path: inset(0 100% 0 0);
-      }
-
-      .tw.is-in {
-        animation: none;
-      }
-
-      .tw.is-in .tw__clip {
-        animation: type-in var(--type-dur) steps(14) both;
-      }
-
-      .tw.is-in::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.08em;
-        width: 0.045em;
-        height: 0.72em;
-        background: currentColor;
-        animation: caret-move var(--type-dur) steps(14) both,
-          caret-blink 700ms steps(1) 4 forwards;
-      }
-
-      @keyframes type-in {
-        from {
-          clip-path: inset(0 100% 0 0);
-        }
-        to {
-          clip-path: inset(0 0 0 0);
-        }
-      }
-
-      @keyframes caret-move {
-        to {
-          transform: translateX(var(--wordmark-width));
-        }
-      }
-
-      @keyframes caret-blink {
-        0%,
-        49% {
-          opacity: 1;
-        }
-        50%,
-        100% {
-          opacity: 0;
-        }
-      }
-
-      /* Haarlinie – das Gliederungselement vom Flyer */
-      .rule {
-        border: 0;
-        border-top: var(--rule-w) solid currentColor;
-        /* der Browser setzt <hr> von sich aus auf Grau – zurück auf die
-           Textfarbe der Fläche, damit die Linie überall mitläuft */
-        color: inherit;
-        margin: var(--sp-s) 0;
       }
 
       /* Nur für Screenreader */
@@ -618,6 +512,16 @@
 
       .nav .btn {
         font-size: calc(19.8 * var(--k));
+      }
+
+      /* Der Ticketkauf ist das Ziel der Seite. Die Pille steht deshalb
+         deutlich grösser als die Nebennavigation; der weiche Schatten
+         löst sie – wie die Meta-Zeile – vom Foto ab. */
+      .nav .btn--lead {
+        font-size: calc(27 * var(--k));
+        padding: 0 1.25em;
+        letter-spacing: 0.01em;
+        box-shadow: 0 calc(2 * var(--k)) calc(22 * var(--k)) rgba(0, 0, 0, 0.6);
       }
 
       /* --- untere Komposition (Meta-Block, Wortmarke, Magentabalken) -- */
@@ -840,7 +744,7 @@
       /* --- Footer ------------------------------------------------------ */
       .footer {
         position: relative;
-        padding: var(--sp-l) var(--gutter) var(--sp-m);
+        padding: var(--sp-l) var(--gutter) var(--sp-s);
       }
 
       /* Ticket-Aufruf, übernommen von der Flyer-Rückseite */
@@ -866,6 +770,7 @@
 
       /* alle sechs Links in einer Zeile, in drei Paaren gruppiert */
       .footer__links {
+        margin-top: var(--sp-l);
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -890,6 +795,8 @@
         border-bottom-color: currentColor;
       }
 
+      /* Abschluss der Seite: die Wortmarke steht als letztes Element
+         über die volle Spaltenbreite, ohne trennende Linien. */
       .footer__wordmark {
         font-family: var(--serif);
         font-weight: 400;
@@ -902,12 +809,6 @@
         text-align: center;
         white-space: nowrap;
         margin: var(--sp-l) 0 0;
-      }
-
-      /* Die Linie unter der Wortmarke sitzt unterhalb der Unterlängen –
-         dafür sorgt deren padding-bottom. */
-      .footer__wordmark + .rule {
-        margin-top: var(--sp-s);
       }
 
       .footer__legal {
@@ -943,6 +844,10 @@
 
         .nav .btn {
           font-size: 14px;
+        }
+
+        .nav .btn--lead {
+          font-size: 18px;
         }
 
         /* Meta-Block wird zum lesbaren Stapel über der Wortmarke */
@@ -1096,7 +1001,7 @@
         <a class="logo on-load" href="/">MELODY FACTORY</a>
         <nav class="nav on-load" aria-label="Hauptnavigation">
           <a
-            class="btn"
+            class="btn btn--lead"
             href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
             target="_blank"
             rel="noopener"
@@ -1144,7 +1049,7 @@
           <div class="facts">
             <p class="fact reveal">
               <span class="fact__label">Dauer</span>
-              <span class="fact__value">1 Std. 10 Min. ohne Pause</span>
+              <span class="fact__value">1 Std. ohne Pause</span>
             </p>
             <p class="fact reveal">
               <span class="fact__label">Ort</span>
@@ -1269,14 +1174,6 @@
           >
         </div>
 
-        <hr class="rule reveal reveal--wipe" />
-
-        <p class="footer__wordmark">
-          <span class="tw reveal"><span class="tw__clip">Melody Factory</span></span>
-        </p>
-
-        <hr class="rule reveal reveal--wipe" />
-
         <nav class="footer__links reveal" aria-label="Footer">
           <ul class="linkgroup">
             <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
@@ -1293,6 +1190,8 @@
         </nav>
 
         <p class="footer__legal reveal">&copy; 2026 Melody Factory. All rights reserved.</p>
+
+        <p class="footer__wordmark reveal">Melody Factory</p>
       </footer>
     </div>
     <script>
