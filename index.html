@@ -514,11 +514,13 @@
         font-size: calc(19.8 * var(--k));
       }
 
-      /* Der Ticketkauf ist das Ziel der Seite. Die Pille steht deshalb
-         deutlich grösser als die Nebennavigation; der weiche Schatten
-         löst sie – wie die Meta-Zeile – vom Foto ab. */
-      .nav .btn--lead {
-        font-size: calc(27 * var(--k));
+      /* Der Ticketkauf ist das Ziel der Seite. Der Aufruf steht deshalb
+         nicht in der Navigation, sondern als grösstes Bedienelement in
+         der unteren Komposition; der weiche Schatten löst ihn – wie die
+         Meta-Zeile – vom Foto ab. */
+      .btn--cta {
+        margin-bottom: var(--baseline-gap);
+        font-size: calc(40 * var(--k));
         padding: 0 1.25em;
         letter-spacing: 0.01em;
         box-shadow: 0 calc(2 * var(--k)) calc(22 * var(--k)) rgba(0, 0, 0, 0.6);
@@ -526,6 +528,10 @@
 
       /* --- untere Komposition (Meta-Block, Wortmarke, Magentabalken) -- */
       .lower {
+        /* Abstand der Grundlinie zum Magentabalken: 68 aus dem Entwurf,
+           +20 %. Wortmarke und Ticket-Pille teilen ihn sich, dadurch
+           schliessen beide auf derselben Linie ab. */
+        --baseline-gap: calc(81.6 * var(--k));
         position: absolute;
         z-index: 2;
         left: 0;
@@ -589,6 +595,17 @@
         left: 55.5%;
       }
 
+      /* Wortmarke und Ticket-Aufruf teilen sich eine Zeile: beide sitzen
+         auf derselben Grundlinie, der Aufruf an der rechten Satzkante. */
+      .lower__row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: calc(44 * var(--k));
+        padding-right: calc(35 * var(--k));
+      }
+
       .wordmark {
         display: block;
         font-family: var(--serif);
@@ -597,8 +614,7 @@
         font-size: var(--fs-display);
         line-height: 0.66; /* Versalhöhen-Box */
         letter-spacing: 0.005em;
-        /* Abstand zum Magentabalken: 68 aus dem Entwurf, +20 % */
-        margin: 0 0 calc(81.6 * var(--k)) calc(52 * var(--k));
+        margin: 0 0 var(--baseline-gap) calc(52 * var(--k));
       }
 
       .bar {
@@ -751,7 +767,7 @@
       .cta {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-between;
         gap: var(--sp-s) var(--sp-m);
       }
@@ -765,21 +781,27 @@
       }
 
       .cta .btn {
-        font-size: var(--fs-1);
+        font-size: var(--fs-2);
       }
 
-      /* alle sechs Links in einer Zeile, in drei Paaren gruppiert */
+      /* Alle sechs Links stehen als eine zentrierte Spalte in der linken
+         Blatthälfte; die Senkrechte rechts davon liegt damit exakt auf der
+         Mittelachse des Satzspiegels und ist genau so hoch wie der Block. */
       .footer__links {
         margin-top: var(--sp-l);
+        width: 50%;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: var(--sp-xs) var(--sp-m);
+        flex-direction: column;
+        align-items: center;
+        gap: var(--sp-xs);
+        text-align: center;
+        border-right: var(--rule-w) solid currentColor;
       }
 
       .linkgroup {
         display: flex;
-        gap: var(--sp-s);
+        flex-direction: column;
+        gap: var(--sp-3xs);
         list-style: none;
         margin: 0;
         padding: 0;
@@ -814,7 +836,8 @@
       .footer__legal {
         font-size: var(--fs--1);
         line-height: 1.2;
-        margin: var(--sp-s) 0 0;
+        text-align: center;
+        margin: 0;
       }
 
       /* ===============================================================
@@ -846,8 +869,11 @@
           font-size: 14px;
         }
 
-        .nav .btn--lead {
-          font-size: 18px;
+        /* bricht auf schmalen Viewports unter die Wortmarke und steht
+           dort auf derselben Satzkante wie sie */
+        .btn--cta {
+          margin-left: 20px;
+          font-size: 22px;
         }
 
         /* Meta-Block wird zum lesbaren Stapel über der Wortmarke */
@@ -886,9 +912,18 @@
           height: 0;
         }
 
+        .lower__row {
+          gap: 16px;
+          padding-right: 20px;
+        }
+
+        .lower {
+          --baseline-gap: 14.4px;
+        }
+
         .wordmark {
           line-height: 0.7;
-          margin: 0 20px 14.4px;
+          margin: 0 20px var(--baseline-gap);
         }
 
         .bar {
@@ -943,20 +978,12 @@
           font-size: 0.9em;
         }
 
-        /* Gruppen auflösen: sechs Links gleichmässig in einer Zeile */
-        .linkgroup {
-          display: contents;
-        }
-
+        /* Linkspalte nur enger gesetzt, Geometrie bleibt */
         .footer__links {
-          column-gap: 2.2vw;
-          row-gap: var(--sp-2xs);
-          font-size: clamp(10px, 2.9vw, 15px);
+          gap: var(--sp-2xs);
+          font-size: clamp(12px, 3.4vw, 16px);
         }
 
-        .cta {
-          align-items: flex-start;
-        }
       }
 
       /* sehr flache Querformat-Handys */
@@ -999,16 +1026,6 @@
 
       <header class="header">
         <a class="logo on-load" href="/">MELODY FACTORY</a>
-        <nav class="nav on-load" aria-label="Hauptnavigation">
-          <a
-            class="btn btn--lead"
-            href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
-            target="_blank"
-            rel="noopener"
-            >Tickets</a
-          >
-          <a class="btn" href="#programm">Kalender</a>
-        </nav>
       </header>
 
       <div class="lower">
@@ -1022,7 +1039,17 @@
           <span class="on-load m-time">20:00 Uhr</span>
         </p>
 
-        <h1 class="wordmark on-load">NOW!</h1>
+        <div class="lower__row">
+          <h1 class="wordmark on-load">NOW!</h1>
+
+          <a
+            class="btn btn--cta on-load"
+            href="https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt"
+            target="_blank"
+            rel="noopener"
+            >Tickets</a
+          >
+        </div>
 
         <div class="bar on-load on-load--wipe"></div>
       </div>
@@ -1176,10 +1203,6 @@
 
         <nav class="footer__links reveal" aria-label="Footer">
           <ul class="linkgroup">
-            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
-            <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">Youtube</a></li>
-          </ul>
-          <ul class="linkgroup">
             <li><a href="#impressum">Impressum</a></li>
             <li><a href="#datenschutz">Datenschutz</a></li>
           </ul>
@@ -1187,11 +1210,15 @@
             <li><a href="mailto:info@melodyfactory.ch">Kontakt</a></li>
             <li><a href="#newsletter">Newsletter</a></li>
           </ul>
+          <ul class="linkgroup">
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">Youtube</a></li>
+          </ul>
         </nav>
 
-        <p class="footer__legal reveal">&copy; 2026 Melody Factory. All rights reserved.</p>
-
         <p class="footer__wordmark reveal">Melody Factory</p>
+
+        <p class="footer__legal reveal">&copy; 2026 Melody Factory. All rights reserved.</p>
       </footer>
     </div>
     <script>
