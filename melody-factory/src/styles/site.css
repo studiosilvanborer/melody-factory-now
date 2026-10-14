@@ -497,11 +497,16 @@ a {
 
 /* Wortmarke und Ticket-Aufruf teilen sich eine Zeile: beide sitzen
    auf derselben Grundlinie, der Aufruf an der rechten Satzkante. */
+/* Wortmarke und Ticket-Pille stehen nebeneinander, nicht an den
+   beiden Enden der Zeile: der Aufruf gehoert zum NOW!, nicht an den
+   fernen Bildrand. Gemeinsame Grundlinie ueber --baseline-gap, den
+   sich beide teilen. Wird es zu eng, bricht die Pille unter die
+   Wortmarke – darum flex-wrap. */
 .lower__row {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: calc(44 * var(--k));
   padding-right: calc(35 * var(--k));
 }
