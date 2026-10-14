@@ -13,6 +13,26 @@ import {fetchEventPage, resolveFetchMode, type FetchMode} from '@/sanity/live'
 import type {EventPageData} from '@/sanity/types'
 
 /**
+ * Die Seite wird bei der Anfrage gerechnet, nicht beim Bauen.
+ *
+ * Das ist die Kehrseite der kurzen Cache-Lebensdauer in live.ts: Next
+ * nimmt nur Inhalte in die vorgerechnete Huelle auf, die laenger als
+ * fuenf Minuten gelten. Die Wahl steht also zwischen «vorgerechnet,
+ * dafuer bis zu zweimal laden nach einer Aenderung» und «bei der
+ * Anfrage gerechnet, dafuer beim ersten Laden aktuell».
+ *
+ * Fuer eine gepflegte Seite ist das zweite richtig: der Kunde aendert
+ * etwas und sieht es, ohne zu wissen, was ein Cache ist. Gekostet ist
+ * es fast nichts – eine Abfrage an Sanity, gebuendelt ueber zwei
+ * Sekunden, bei dieser Seitengroesse im Millisekundenbereich.
+ *
+ * Soll die Seite wieder statisch werden, ist der Weg ein GROQ-Webhook
+ * aus sanity.io/manage auf eine Revalidierungs-Route – dann darf die
+ * Lebensdauer wieder lang sein, weil Sanity selbst Bescheid gibt.
+ */
+export const instant = false
+
+/**
  * Fuer Besucher ist die Seite statisch vorgerechnet und wird von der
  * Live Content API aktualisiert, sobald im Studio gespeichert wird.
  *

@@ -32,6 +32,32 @@ export const {sanityFetch, SanityLive} = defineLive({
   browserToken: false,
 })
 
+/**
+ * Wie lange eine Antwort aus Sanity gilt.
+ *
+ * Die Zahlen sehen klein aus, und das ist Absicht. Entscheidend ist der
+ * Abstand zwischen `revalidate` und `expire`:
+ *
+ *   revalidate  ab hier frischt der Server im Hintergrund auf und
+ *               liefert dem Anfragenden noch den alten Stand
+ *   expire      ab hier wartet die Anfrage auf frische Daten
+ *
+ * Zwischen beiden liegt das Fenster, in dem ein Neuladen noch den alten
+ * Stand zeigt und erst das zweite den neuen – das beruehmte «ich muss
+ * zweimal laden». Mit `minutes` war dieses Fenster 59 Minuten breit.
+ * Hier ist es eine Sekunde: wer nach dem Speichern im Studio neu laedt,
+ * wartet die paar Millisekunden auf Sanity und sieht den neuen Stand
+ * beim ersten Mal.
+ *
+ * Der Preis ist eine Abfrage je Seitenaufruf, sofern nicht mehrere
+ * innerhalb von zwei Sekunden zusammenfallen. Fuer eine Seite dieser
+ * Groesse ist das nichts; waechst der Verkehr sehr stark, sind hoehere
+ * Werte hier die eine Stelle, an der man dreht.
+ *
+ * `stale: 0`, damit auch der Router im Browser nichts Altes aufhebt.
+ */
+const LIFETIME = {stale: 0, revalidate: 1, expire: 2}
+
 /** Wie gelesen wird: veroeffentlicht fuer Besucher, Entwurf in der Vorschau. */
 export type FetchMode = {
   perspective: LivePerspective
@@ -48,20 +74,11 @@ export type FetchMode = {
  * Cookies und draftMode in einer gecachten Funktion nichts zu suchen
  * haben.
  *
- * Zur Lebensdauer: `minutes` heisst eine Minute bis zur Auffrischung im
- * Hintergrund. Das ist die Untergrenze, unter der eine Aenderung im
- * Studio *garantiert* auf der Seite ankommt.
- *
- * Ohne diese Zeile gilt das Standardprofil mit 15 Minuten – und genau
- * das sah aus wie «das CMS haengt nicht dran»: Wer im Studio speichert
- * und die Seite neu laedt, sieht den alten Stand. Die Live Content API
- * federt das nur ab, solange die Seite in einem Tab offen *ist*, wenn
- * gespeichert wird; dann kommt die Aenderung sofort. Ist kein Tab
- * offen, meldet niemand den Treffer, und es bleibt beim Zeitablauf.
+ * Zur Lebensdauer – siehe LIFETIME.
  */
 export async function fetchEventPage(mode: FetchMode) {
   'use cache'
-  cacheLife('minutes')
+  cacheLife(LIFETIME)
   const {data} = await sanityFetch({query: EVENT_PAGE_QUERY, ...mode})
   return data
 }
@@ -69,7 +86,7 @@ export async function fetchEventPage(mode: FetchMode) {
 /** Ueberschrift und Terminliste des Kalenders. Gleiche Regeln wie oben. */
 export async function fetchCalendarPage(mode: FetchMode) {
   'use cache'
-  cacheLife('minutes')
+  cacheLife(LIFETIME)
   const {data} = await sanityFetch({query: CALENDAR_PAGE_QUERY, ...mode})
   return data
 }

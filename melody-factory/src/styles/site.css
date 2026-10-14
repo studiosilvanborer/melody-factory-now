@@ -701,9 +701,12 @@ a.trailer__frame:focus-visible::after {
   border-top: var(--underline-w) solid currentColor;
 }
 
+/* Drei Felder: wann – was – Tickets. Die mittlere Spalte ist so breit
+   wie ihr Text, damit die Schaltflaeche direkt neben der Produktion
+   steht und nicht am fernen Seitenrand. */
 .cal__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 2fr);
   column-gap: var(--sp-m);
   align-items: start;
   padding: var(--sp-s) 0;
@@ -734,9 +737,12 @@ a.trailer__frame:focus-visible::after {
 }
 
 /* Dieselbe Pille wie ueberall auf der Seite, eine Stufe kleiner
-   gesetzt: sie steht neben Fliesstext, nicht fuer sich allein. */
+   gesetzt: sie steht neben Fliesstext, nicht fuer sich allein.
+   Unten ausgerichtet, damit sie auf der Zeile der Produktion sitzt
+   und nicht auf der des Ortes darueber. */
 .cal__tickets {
-  justify-self: end;
+  justify-self: start;
+  align-self: end;
   font-size: var(--fs--1);
 }
 
@@ -1033,6 +1039,7 @@ a.trailer__frame:focus-visible::after {
   .cal__tickets {
     grid-column: 2;
     grid-row: 1 / span 2;
+    justify-self: end;
     align-self: start;
   }
 }

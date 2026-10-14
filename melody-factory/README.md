@@ -138,16 +138,20 @@ der meldet sie an Next.js weiter, das genau die betroffenen
 Cache-Einträge verwirft. Das ist der Fall beim Arbeiten im
 Vorschau-Reiter.
 
-**Sonst innerhalb einer Minute.** Ist kein Tab offen, wenn gespeichert
+**Sonst beim nächsten Neuladen.** Ist kein Tab offen, wenn gespeichert
 wird, meldet niemand etwas – dann greift die Lebensdauer des Caches.
-Die steht in `src/sanity/live.ts` über `cacheLife('minutes')` auf eine
-Minute. Ohne diese Zeile gälte Next.js' Standardprofil mit 15 Minuten,
-und genau das sieht aus wie ein kaputtes CMS: speichern, neu laden,
-nichts ändert sich.
+Sie steht in `src/sanity/live.ts` unter `LIFETIME`, und die Zahlen dort
+sind mit Bedacht klein: zwischen `revalidate` und `expire` liegt genau
+das Fenster, in dem ein Neuladen noch den alten Stand zeigt und erst
+das zweite den neuen. Hier ist es eine Sekunde breit – wer nach dem
+Speichern neu lädt, sieht den neuen Stand beim ersten Mal.
 
-Wer es auch ohne offenen Tab sofort haben will, hängt einen
-GROQ-Webhook in sanity.io/manage an eine Revalidierungs-Route. Für zwei
-Seiten mit seltenen Änderungen ist die Minute der einfachere Handel.
+Der Preis ist eine Abfrage je Seitenaufruf, sofern nicht mehrere
+innerhalb von zwei Sekunden zusammenfallen. Für eine Seite dieser
+Grösse ist das nichts. Wächst der Verkehr sehr stark, sind höhere Werte
+in `LIFETIME` die eine Stelle, an der man dreht – und ein GROQ-Webhook
+aus sanity.io/manage auf eine Revalidierungs-Route hält die Seite dann
+trotzdem sofort aktuell.
 
 ---
 
