@@ -652,6 +652,29 @@ a.trailer__frame:focus-visible::after {
   transform: translate(-40%, -50%) scale(1.08);
 }
 
+/* Ein hochgeladenes Video bestimmt die Form des Rahmens, nicht
+   umgekehrt: Hoch- wie Querformat stehen vollstaendig im Bild. Die
+   Hoehe ist gedeckelt, damit ein Hochformat die Spalte nicht sprengt. */
+.trailer__frame--native {
+  width: fit-content;
+  aspect-ratio: auto;
+  max-height: 70svh;
+}
+
+.trailer__frame--native video {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 70svh;
+  object-fit: contain;
+}
+
+/* Das Abspieldreieck gehoert zum leeren Rahmen. Liegt ein Video darin,
+   waere es nur ein Fleck ueber dem Bild. */
+.trailer__frame:has(video, iframe)::after {
+  display: none;
+}
+
 .trailer__frame video,
 .trailer__frame iframe,
 .trailer__frame img {

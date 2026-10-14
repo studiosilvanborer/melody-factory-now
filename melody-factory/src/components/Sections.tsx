@@ -75,7 +75,10 @@ export function FactsAndCastSection({page}: {page: EventPageData}) {
 
 /** «Infos» und «Trailer» teilen sich den zweiten zweispaltigen Block. */
 export function InfosAndTrailerSection({page}: {page: EventPageData}) {
-  const embed = embedUrl(page.trailerUrl)
+  // Eine hochgeladene Datei schlaegt den Link: wer eine hinterlegt, meint
+  // sie auch. Der Link bleibt fuer YouTube und Vimeo.
+  const file = page.trailerVideo?.asset?.url
+  const embed = file ? null : embedUrl(page.trailerUrl)
 
   return (
     <section className="section cols">
@@ -89,19 +92,34 @@ export function InfosAndTrailerSection({page}: {page: EventPageData}) {
 
       <div className="col">
         <h3 className="h-serif col__title reveal">{page.trailerTitle}</h3>
-        <div className="trailer__frame reveal">
-          {embed ? (
-            <iframe
-              src={embed}
+        {file ? (
+          /* Das eigene Video bringt sein Format selbst mit – der Rahmen
+             legt ihm keines auf, sonst schnitte er ein Hochformat auf
+             16:9 zurecht und zeigte vom Bild nur einen Streifen. */
+          <div className="trailer__frame trailer__frame--native reveal">
+            <video
+              src={file}
+              controls
+              playsInline
+              preload="metadata"
               title={`${page.trailerTitle} – ${page.wordmark}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
             />
-          ) : (
-            <span className="visually-hidden">{page.trailerPlaceholder}</span>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="trailer__frame reveal">
+            {embed ? (
+              <iframe
+                src={embed}
+                title={`${page.trailerTitle} – ${page.wordmark}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+              />
+            ) : (
+              <span className="visually-hidden">{page.trailerPlaceholder}</span>
+            )}
+          </div>
+        )}
       </div>
     </section>
   )

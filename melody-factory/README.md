@@ -73,7 +73,7 @@ Aufgeteilt in Reiter, die der Leserichtung der Seite folgen:
 | **Zeit / Ort** | Spaltentitel, die drei Bezeichnungen, beliebig viele zusätzliche Angaben |
 | **Besetzung** | Liste aus Instrument und Name, per Ziehen sortierbar |
 | **Infos** | Spaltentitel, Fliesstext mit Fett-Auszeichnung, Schlusszeile |
-| **Trailer** | Spaltentitel, YouTube- oder Vimeo-Link, Hinweistext solange keiner hinterlegt ist |
+| **Trailer** | Spaltentitel, Video-Datei zum Hochladen *oder* YouTube-/Vimeo-Link, Hinweistext solange keines von beidem hinterlegt ist |
 | **Footer** | Linkspalten, Ticket-Aufruf, grosse Wortmarke, rechtliche Zeile |
 | **Suchmaschinen & Social** | Browser-Titel, Beschreibung, Titel/Text/Bild für geteilte Links |
 
@@ -84,6 +84,12 @@ der Seite an drei Stellen – im Hero, bei «Zeit / Ort» und im Ticket-Aufruf
 im Footer – aber gepflegt werden sie nur im Reiter *Veranstaltung*. Das
 Datum kann also nie an einer Stelle alt werden. «7. November 2026» und
 «20:00 Uhr» rechnet die Seite selbst aus dem Datumsfeld, in Zürcher Zeit.
+
+**Das Video bestimmt seine Form selbst.** Ein hochgeladenes Video wird
+gezeigt, wie es ist – Hochformat wie Querformat, der Rahmen passt sich
+an. Liegt eine Datei im Feld, hat sie Vorrang vor dem Link daneben.
+Vor dem Hochladen komprimieren: unter 10 MB lädt es auch mobil flüssig
+(aus 52 MB wurden beim ersten Trailer 8, ohne sichtbaren Verlust).
 
 **Die Besetzung verteilt sich selbst.** Die Liste läuft über zwei Spalten;
 wer umsortiert oder jemanden ergänzt, muss nicht an den Umbruch denken.

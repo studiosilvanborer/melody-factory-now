@@ -40,6 +40,7 @@ export const EVENT_PAGE_QUERY = defineQuery(`
     infosOutro,
 
     trailerTitle,
+    trailerVideo{asset->{_id, url, mimeType}},
     trailerUrl,
     trailerPlaceholder,
 

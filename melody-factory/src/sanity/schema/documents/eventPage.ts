@@ -320,12 +320,21 @@ export const eventPage = defineType({
       validation: (rule) => rule.required().max(40),
     }),
     defineField({
+      name: 'trailerVideo',
+      title: 'Video-Datei',
+      type: 'file',
+      group: 'trailer',
+      options: {accept: 'video/*'},
+      description:
+        'Direkt hochgeladenes Video, MP4. Hat Vorrang vor dem Link darunter – liegt hier eine Datei, wird sie gezeigt. Vorher komprimieren: unter 10 MB lädt es auch auf dem Handy flüssig.',
+    }),
+    defineField({
       name: 'trailerUrl',
       title: 'Video-Link',
       type: 'url',
       group: 'trailer',
       description:
-        'YouTube- oder Vimeo-Adresse. Solange das Feld leer ist, zeigt die Seite den leeren Rahmen mit dem Hinweistext unten.',
+        'YouTube- oder Vimeo-Adresse, als Alternative zur Datei oben. Sind beide Felder leer, zeigt die Seite den leeren Rahmen mit dem Hinweistext unten.',
       validation: (rule) => rule.uri({scheme: ['http', 'https']}),
     }),
     defineField({
