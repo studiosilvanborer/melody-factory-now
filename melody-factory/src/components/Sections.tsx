@@ -177,7 +177,13 @@ function FooterLinkItem({link}: {link: FooterLink}) {
   const href = link.href.trim()
 
   if (href.startsWith('/')) {
-    return <Link href={href}>{link.label}</Link>
+    // prefetch aus, aus demselben Grund wie beim Kalender-Knopf im Hero:
+    // lieber eine Anfrage mehr als ein veralteter Stand beim Klick.
+    return (
+      <Link href={href} prefetch={false}>
+        {link.label}
+      </Link>
+    )
   }
 
   if (isExternal(href)) {

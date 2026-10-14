@@ -41,17 +41,6 @@ export function Hero({page}: {page: EventPageData}) {
         <Link className="logo on-load" href="/">
           {page.logoText}
         </Link>
-
-        {/* Die Kopfzeile traegt genau eine Schaltflaeche: den Weg zur
-            Terminliste. Der Ticketkauf steht bewusst nicht hier, sondern
-            als groesstes Bedienelement unten in der Komposition. */}
-        {page.calendarLabel ? (
-          <nav className="nav" aria-label="Hauptnavigation">
-            <Link className="btn on-load" href="/kalender">
-              {page.calendarLabel}
-            </Link>
-          </nav>
-        ) : null}
       </header>
 
       <div className="lower">
@@ -80,6 +69,24 @@ export function Hero({page}: {page: EventPageData}) {
           >
             {page.ticketLabel}
           </a>
+
+          {/* Gleiche Groesse, gleiche Form, nur als Umriss: beide Wege
+              stehen nebeneinander, aber der Ticketkauf bleibt der
+              gefuellte und damit der erste. */}
+          {page.calendarLabel ? (
+            /* prefetch aus: Next holt sonst beim Ueberfahren schon die
+               Terminliste und zeigt beim Klick genau diesen Stand –
+               wer vorher im Studio etwas geaendert hat, saehe ihn erst
+               nach einem zweiten Laden. Bei zwei Seiten ist das
+               Vorausladen kein Gewinn, der alte Stand aber ein Aerger. */
+            <Link
+              className="btn btn--cta btn--ghost on-load"
+              href="/kalender"
+              prefetch={false}
+            >
+              {page.calendarLabel}
+            </Link>
+          ) : null}
         </div>
 
         <div className="bar on-load on-load--wipe" />

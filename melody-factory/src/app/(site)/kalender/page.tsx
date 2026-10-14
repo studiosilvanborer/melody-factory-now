@@ -75,7 +75,7 @@ async function PageContent({mode}: {mode: FetchMode}) {
   return (
     <main className="page page--sub">
       <header className="subhead">
-        <Link className="logo" href="/">
+        <Link className="logo" href="/" prefetch={false}>
           {event?.logoText ?? 'MELODY FACTORY'}
         </Link>
       </header>
