@@ -121,9 +121,27 @@ Formular, rechts die Seite. Wer tippt, sieht die Änderung sofort – und
 kann in der Seite direkt auf einen Text klicken, um im Formular an der
 richtigen Stelle zu landen. Dafür braucht es `SANITY_API_READ_TOKEN`.
 
-Veröffentlichte Änderungen erscheinen ohne Deploy: Sanity meldet sie über
-die Live Content API, Next.js verwirft genau die betroffenen
-Cache-Einträge und baut die Seite neu.
+### Wann eine Änderung auf der Seite ankommt
+
+Veröffentlichte Änderungen erscheinen ohne Deploy – auf zwei Wegen, und
+es lohnt sich, den Unterschied zu kennen:
+
+**Sofort, wenn die Seite offen ist.** Sanity meldet die Änderung über die
+Live Content API an jeden Browser, der die Seite gerade geöffnet hat;
+der meldet sie an Next.js weiter, das genau die betroffenen
+Cache-Einträge verwirft. Das ist der Fall beim Arbeiten im
+Vorschau-Reiter.
+
+**Sonst innerhalb einer Minute.** Ist kein Tab offen, wenn gespeichert
+wird, meldet niemand etwas – dann greift die Lebensdauer des Caches.
+Die steht in `src/sanity/live.ts` über `cacheLife('minutes')` auf eine
+Minute. Ohne diese Zeile gälte Next.js' Standardprofil mit 15 Minuten,
+und genau das sieht aus wie ein kaputtes CMS: speichern, neu laden,
+nichts ändert sich.
+
+Wer es auch ohne offenen Tab sofort haben will, hängt einen
+GROQ-Webhook in sanity.io/manage an eine Revalidierungs-Route. Für zwei
+Seiten mit seltenen Änderungen ist die Minute der einfachere Handel.
 
 ---
 

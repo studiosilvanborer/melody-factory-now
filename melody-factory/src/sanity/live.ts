@@ -1,3 +1,4 @@
+import {cacheLife} from 'next/cache'
 import {cookies, draftMode} from 'next/headers'
 import {
   defineLive,
@@ -42,13 +43,25 @@ export type FetchMode = {
  * Die Inhalte der Seite.
  *
  * `use cache` ist Pflicht: sanityFetch markiert das Ergebnis intern mit
- * cacheTag/cacheLife, und beides geht nur innerhalb einer Cache-Grenze.
- * Der Modus kommt als Argument herein – er wird ausserhalb aufgeloest,
- * weil Cookies und draftMode in einer gecachten Funktion nichts zu
- * suchen haben.
+ * cacheTag, und das geht nur innerhalb einer Cache-Grenze. Der Modus
+ * kommt als Argument herein – er wird ausserhalb aufgeloest, weil
+ * Cookies und draftMode in einer gecachten Funktion nichts zu suchen
+ * haben.
+ *
+ * Zur Lebensdauer: `minutes` heisst eine Minute bis zur Auffrischung im
+ * Hintergrund. Das ist die Untergrenze, unter der eine Aenderung im
+ * Studio *garantiert* auf der Seite ankommt.
+ *
+ * Ohne diese Zeile gilt das Standardprofil mit 15 Minuten – und genau
+ * das sah aus wie «das CMS haengt nicht dran»: Wer im Studio speichert
+ * und die Seite neu laedt, sieht den alten Stand. Die Live Content API
+ * federt das nur ab, solange die Seite in einem Tab offen *ist*, wenn
+ * gespeichert wird; dann kommt die Aenderung sofort. Ist kein Tab
+ * offen, meldet niemand den Treffer, und es bleibt beim Zeitablauf.
  */
 export async function fetchEventPage(mode: FetchMode) {
   'use cache'
+  cacheLife('minutes')
   const {data} = await sanityFetch({query: EVENT_PAGE_QUERY, ...mode})
   return data
 }
@@ -56,6 +69,7 @@ export async function fetchEventPage(mode: FetchMode) {
 /** Ueberschrift und Terminliste des Kalenders. Gleiche Regeln wie oben. */
 export async function fetchCalendarPage(mode: FetchMode) {
   'use cache'
+  cacheLife('minutes')
   const {data} = await sanityFetch({query: CALENDAR_PAGE_QUERY, ...mode})
   return data
 }
