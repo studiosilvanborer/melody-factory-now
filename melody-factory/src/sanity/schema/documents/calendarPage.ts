@@ -33,7 +33,7 @@ export const calendarPage = defineType({
       type: 'string',
       group: 'calendar',
       description: 'Die grosse Garamond-Zeile über der Liste.',
-      initialValue: 'Termine',
+      initialValue: 'Kalender',
       validation: (rule) => rule.required().max(40),
     }),
     defineField({
@@ -62,7 +62,7 @@ export const calendarPage = defineType({
       type: 'string',
       group: 'seo',
       description: 'Auch die Zeile, die Google als Erstes zeigt. Rund 60 Zeichen.',
-      initialValue: 'Termine – Melody Factory',
+      initialValue: 'Kalender – Melody Factory',
       validation: (rule) => rule.required().max(70),
     }),
     defineField({

@@ -208,7 +208,7 @@ const calendar = {
   _id: CALENDAR_ID,
   _type: 'calendarPage',
 
-  title: 'Termine',
+  title: 'Kalender',
   entries: withKeys(
     [
       '2026-11-07T19:00:00.000Z',
@@ -226,7 +226,7 @@ const calendar = {
   ),
   emptyText: 'Neue Termine folgen in Kürze.',
 
-  metaTitle: 'Termine – Melody Factory',
+  metaTitle: 'Kalender – Melody Factory',
   metaDescription:
     'Alle Termine der Melody Factory – Daten, Orte und Tickets auf einen Blick.',
 }
