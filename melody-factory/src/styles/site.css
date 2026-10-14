@@ -733,17 +733,23 @@ a.trailer__frame:focus-visible::after {
   font-weight: 400;
 }
 
+/* Dieselbe Pille wie ueberall auf der Seite, eine Stufe kleiner
+   gesetzt: sie steht neben Fliesstext, nicht fuer sich allein. */
 .cal__tickets {
   justify-self: end;
-  font-weight: 700;
-  white-space: nowrap;
-  border-bottom: var(--underline-w) solid transparent;
-  transition: border-color var(--dur) var(--ease);
+  font-size: var(--fs--1);
 }
 
-.cal__tickets:hover,
-.cal__tickets:focus-visible {
-  border-bottom-color: currentColor;
+/* Ohne Ticket-Link im Studio bleibt die Pille ein Umriss: als Form
+   erkennbar, als Knopf erkennbar nicht verfuegbar. Keine Hover-
+   Reaktion, kein Zeigefinger – nichts, was Klickbarkeit verspricht. */
+.cal__tickets--off,
+.cal__tickets--off:hover {
+  background: transparent;
+  color: inherit;
+  box-shadow: inset 0 0 0 var(--underline-w) currentColor;
+  opacity: 0.45;
+  cursor: default;
 }
 
 .cal__empty {

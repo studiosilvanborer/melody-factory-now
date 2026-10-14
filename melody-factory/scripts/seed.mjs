@@ -196,7 +196,14 @@ const content = {
  *
  * Wochentag und Schreibweise der Uhrzeit stehen hier nicht: die
  * rechnet die Seite aus dem Datum.
+ *
+ * Nur der erste Termin hat einen Ticket-Link – fuer ihn laeuft der
+ * Vorverkauf. Bei den uebrigen bleibt das Feld leer, und die Seite
+ * zeigt die Schaltflaeche als blassen Umriss. Wer spaeter die Adresse
+ * eintraegt, macht sie damit aktiv.
  */
+const TICKET_URL = 'https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt'
+
 const calendar = {
   _id: CALENDAR_ID,
   _type: 'calendarPage',
@@ -208,12 +215,12 @@ const calendar = {
       '2026-12-19T19:00:00.000Z',
       '2027-03-06T19:00:00.000Z',
       '2027-05-22T18:00:00.000Z',
-    ].map((startsAt) => ({
+    ].map((startsAt, index) => ({
       _type: 'calendarEntry',
       startsAt,
       venue: 'KKL Luzern',
       production: 'NOW!',
-      ticketUrl: 'https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt',
+      ...(index === 0 ? {ticketUrl: TICKET_URL} : {}),
       ticketLabel: 'Tickets',
     })),
   ),

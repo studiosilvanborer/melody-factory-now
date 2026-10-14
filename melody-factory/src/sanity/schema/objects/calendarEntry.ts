@@ -43,11 +43,13 @@ export const calendarEntry = defineType({
       name: 'ticketUrl',
       title: 'Ticket-Link',
       type: 'url',
-      validation: (rule) => rule.required().uri({scheme: ['http', 'https']}),
+      description:
+        'Solange hier nichts steht, ist die Schaltfläche grau und nicht anklickbar. Sobald der Vorverkauf steht, Adresse eintragen – die Schaltfläche wird von selbst aktiv.',
+      validation: (rule) => rule.uri({scheme: ['http', 'https']}),
     }),
     defineField({
       name: 'ticketLabel',
-      title: 'Beschriftung rechts',
+      title: 'Beschriftung der Schaltfläche',
       type: 'string',
       description: 'Steht am rechten Rand der Zeile – «Tickets», «Restkarten», «Abendkasse».',
       initialValue: 'Tickets',

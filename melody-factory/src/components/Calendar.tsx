@@ -56,13 +56,48 @@ function CalendarRow({entry, index}: {entry: CalendarEntry; index: number}) {
         <span className="cal__production">{entry.production}</span>
       </p>
 
-      <a className="cal__tickets" href={entry.ticketUrl} target="_blank" rel="noopener">
-        {entry.ticketLabel}
-        {/* Sechsmal «Tickets» untereinander sagt vorgelesen nichts aus –
-            welcher Termin gemeint ist, steht nur in der Zeile daneben. */}
-        <span className="visually-hidden">{` für ${entry.production} am ${date}`}</span>
-      </a>
+      <Tickets entry={entry} date={date} />
     </li>
+  )
+}
+
+/**
+ * Die Schaltflaeche am rechten Rand der Zeile.
+ *
+ * Steht im Studio kein Ticket-Link, gibt es nichts zu verlinken – dann
+ * ist es keine Schaltflaeche, sondern eine Auskunft: gleiche Pille, nur
+ * als Umriss und ohne Ziel. Sobald der Vorverkauf steht und die Adresse
+ * eingetragen ist, wird daraus von selbst der aktive Knopf.
+ *
+ * Darum auch <span> statt <a>: ein Link ohne href ist fuer die Tastatur
+ * und fuer Vorleseprogramme kein Link, und ein deaktivierter Knopf, den
+ * man anspringen kann, ist eine Sackgasse. `aria-disabled` sagt es
+ * denen, die es wissen muessen.
+ */
+function Tickets({entry, date}: {entry: CalendarEntry; date: string}) {
+  // Sechsmal «Tickets» untereinander sagt vorgelesen nichts aus – welcher
+  // Termin gemeint ist, steht nur in der Zeile daneben.
+  const context = <span className="visually-hidden">{` für ${entry.production} am ${date}`}</span>
+
+  if (!entry.ticketUrl) {
+    return (
+      <span className="btn cal__tickets cal__tickets--off" aria-disabled="true">
+        {entry.ticketLabel}
+        {context}
+      </span>
+    )
+  }
+
+  return (
+    <a
+      className="btn cal__tickets"
+      href={entry.ticketUrl}
+      target="_blank"
+      rel="noopener"
+    >
+      {entry.ticketLabel}
+      {context}
+    </a>
   )
 }
 

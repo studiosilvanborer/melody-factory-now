@@ -101,6 +101,12 @@ Unter `/studio` → **Kalender** steht die Seite `/kalender`: eine
 Je Termin werden Datum mit Uhrzeit, Ort, Produktion und Ticket-Link
 gepflegt.
 
+**Der Ticket-Link schaltet die Schaltfläche frei.** Solange das Feld leer
+ist, steht rechts in der Zeile ein blasser Umriss – dieselbe Pille wie
+überall auf der Seite, nur ohne Ziel und nicht anklickbar. Sobald der
+Vorverkauf steht und die Adresse drin ist, wird daraus der aktive Knopf.
+Niemand muss daran denken, etwas ein- oder auszublenden.
+
 **Wochentag und Uhrzeit rechnet die Seite aus dem Datum.** Aus dem
 7. November 2026, 20:00 Uhr wird «Samstag 7. November» und «20.00» – der
 Wochentag kann so nie zum Datum danebenstehen. Solange kein Termin

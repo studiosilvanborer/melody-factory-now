@@ -20,7 +20,7 @@ export type CalendarEntry = {
   startsAt: string;
   venue: string;
   production: string;
-  ticketUrl: string;
+  ticketUrl?: string;
   ticketLabel: string;
 };
 
@@ -385,7 +385,7 @@ export type CALENDAR_PAGE_QUERY_RESULT = {
     startsAt: string;
     venue: string;
     production: string;
-    ticketUrl: string;
+    ticketUrl: string | null;
     ticketLabel: string;
   }> | null;
   emptyText: string;
