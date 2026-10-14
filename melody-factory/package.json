@@ -1,0 +1,38 @@
+{
+  "name": "melody-factory",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "seed": "node scripts/seed.mjs",
+    "sanity:schema": "sanity schema extract --enforce-required-fields",
+    "typegen": "sanity schema extract --enforce-required-fields --force && sanity typegen generate",
+    "studio:deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@portabletext/react": "^8.0.1",
+    "@sanity/icons": "^5.2.3",
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/locale-de-de": "^1.1.37",
+    "@sanity/ui": "^4.4.5",
+    "@sanity/vision": "^6.19.0",
+    "next": "16.4.0",
+    "next-sanity": "^13.3.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sanity": "^6.19.0",
+    "styled-components": "^6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "typescript": "^5"
+  }
+}
