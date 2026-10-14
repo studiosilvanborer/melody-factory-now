@@ -1,5 +1,6 @@
 'use client'
 
+import {usePathname} from 'next/navigation'
 import {useEffect} from 'react'
 
 /**
@@ -22,8 +23,17 @@ import {useEffect} from 'react'
  *
  * Was beim Laden schon im Bild steht, wird im selben Durchlauf auf
  * sichtbar gesetzt – es blitzt also nichts auf.
+ *
+ * Der Pfad gehoert in die Abhaengigkeiten, weil diese Komponente im
+ * Layout sitzt und einen Seitenwechsel ueberlebt. Ohne ihn stammte die
+ * Liste `pending` fuer immer von der Seite, auf der die Komponente
+ * einmal montiert wurde: nach dem Klick auf «Kalender» blieb .js-anim
+ * auf dem <html> stehen, die neuen .reveal-Elemente bekamen nie ihr
+ * .is-in – und die Terminliste war unsichtbar, bis man neu lud.
  */
 export function RevealOnScroll() {
+  const pathname = usePathname()
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
@@ -72,7 +82,7 @@ export function RevealOnScroll() {
       stopListening()
       root.classList.remove('js-anim')
     }
-  }, [])
+  }, [pathname])
 
   return null
 }
