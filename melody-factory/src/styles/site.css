@@ -873,6 +873,27 @@ a.trailer__frame:focus-visible::after {
   font-size: var(--fs-2);
 }
 
+/* Der Newsletter-Aufruf: keine Pille, sondern eine Zeile wie die
+   Footer-Links – unterstrichen erst beim Ueberfahren. Als <button>
+   im Markup, weil er kein Ziel hat, sondern ein Formular oeffnet;
+   das Aussehen des Knopfes muss darum zurueckgesetzt werden. */
+.cta__newsletter {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-bottom: var(--underline-w) solid transparent;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.cta__newsletter:hover,
+.cta__newsletter:focus-visible {
+  border-bottom-color: currentColor;
+}
+
 .linkgroup {
   display: flex;
   flex-direction: column;

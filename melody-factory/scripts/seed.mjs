@@ -176,6 +176,7 @@ const content = {
 
   footerLinkColumns: withKeys(footerLinkColumns),
   ctaTitle: 'Hol dir jetzt Tickets!',
+  newsletterLabel: 'Newsletter abonnieren',
   footerWordmark: 'Melody Factory',
   footerLegal: '© 2026 Melody Factory. All rights reserved.',
 

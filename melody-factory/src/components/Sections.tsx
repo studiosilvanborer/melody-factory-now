@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import {NewsletterButton} from '@/components/NewsletterButton'
 import {RichText} from '@/components/RichText'
 import {embedUrl, formatDate, formatTime, isExternal} from '@/lib/format'
 import type {CastMember, EventPageData, Fact, FooterLink} from '@/sanity/types'
@@ -157,6 +158,14 @@ export function SiteFooter({page}: {page: EventPageData}) {
           <a className="btn" href={page.ticketUrl} target="_blank" rel="noopener">
             {page.ticketLabel}
           </a>
+
+          {/* Der Newsletter steht unter dem Ticketkauf und nicht neben
+              ihm: zwei Pillen nebeneinander lasen sich wie zwei gleich
+              wichtige Ziele. Als schlichte Zeile bleibt er der zweite
+              Weg, erkennbar aber nachgeordnet. */}
+          {page.newsletterLabel ? (
+            <NewsletterButton label={page.newsletterLabel} />
+          ) : null}
         </div>
       </div>
 

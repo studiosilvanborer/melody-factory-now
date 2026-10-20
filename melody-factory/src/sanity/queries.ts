@@ -46,6 +46,7 @@ export const EVENT_PAGE_QUERY = defineQuery(`
 
     footerLinkColumns[]{links[]{label, href}},
     ctaTitle,
+    newsletterLabel,
     footerWordmark,
     footerLegal,
 

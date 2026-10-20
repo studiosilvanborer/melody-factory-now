@@ -4,6 +4,7 @@ import {VisualEditing} from 'next-sanity/visual-editing'
 import type {ReactNode} from 'react'
 
 import {HeroParallaxFallback} from '@/components/HeroParallaxFallback'
+import {MailerLite} from '@/components/MailerLite'
 import {RevealOnScroll} from '@/components/RevealOnScroll'
 import {siteUrl} from '@/sanity/env'
 import {fetchEventPage, resolveFetchMode, SanityLive} from '@/sanity/live'
@@ -88,6 +89,7 @@ export default async function SiteLayout({children}: {children: ReactNode}) {
 
       <RevealOnScroll />
       <HeroParallaxFallback />
+      <MailerLite />
 
       <SanityLive includeDrafts={isDraftMode} />
       {isDraftMode ? <VisualEditing /> : null}

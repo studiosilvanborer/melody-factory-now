@@ -389,6 +389,16 @@ export const eventPage = defineType({
       validation: (rule) => rule.required().max(60),
     }),
     defineField({
+      name: 'newsletterLabel',
+      title: 'Newsletter-Schaltfläche',
+      type: 'string',
+      group: 'footer',
+      description:
+        'Öffnet das Anmeldeformular von MailerLite. Leer lassen, und die Schaltfläche verschwindet – das Pop-up erscheint weiterhin, es wird nur nicht von Hand aufgerufen.',
+      initialValue: 'Newsletter abonnieren',
+      validation: (rule) => rule.max(40),
+    }),
+    defineField({
       name: 'footerWordmark',
       title: 'Grosse Wortmarke im Footer',
       type: 'string',
