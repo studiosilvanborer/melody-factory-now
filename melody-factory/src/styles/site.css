@@ -729,7 +729,19 @@ a.trailer__frame:focus-visible::after {
 }
 
 .subhead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-s);
   padding: 0 var(--gutter);
+}
+
+/* Auf der Magentafläche muss das Signet schwarz sein wie die Schrift
+   daneben. brightness(0) nimmt der Datei die Farbe und lässt die
+   weichen Kanten unberührt – so bleibt es bei einer Bilddatei für
+   beide Seiten. */
+.subhead .signet {
+  filter: brightness(0);
 }
 
 .subhead .logo {

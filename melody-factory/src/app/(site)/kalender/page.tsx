@@ -78,6 +78,18 @@ async function PageContent({mode}: {mode: FetchMode}) {
         <Link className="logo" href="/" prefetch={false}>
           {event?.logoText ?? 'MELODY FACTORY'}
         </Link>
+
+        {/* Dieselbe Ecke wie auf der Startseite, dieselbe Datei – hier
+            aber schwarz, weil sie auf der Magentaflaeche steht.
+            Ohne alt-Text: die Wortmarke links sagt denselben Namen. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="signet"
+          src="/melody-factory-signet.png"
+          width={300}
+          height={321}
+          alt=""
+        />
       </header>
 
       <CalendarSection page={calendar} />
