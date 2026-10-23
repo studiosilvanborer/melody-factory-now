@@ -404,6 +404,20 @@ a {
   white-space: nowrap;
 }
 
+/* Das Signet sitzt in der rechten oberen Ecke, auf gleicher Hoehe wie
+   die Wortmarke. Die Breite kommt aus der Originaldatei (61 x 65) und
+   waechst mit --k wie alles andere mit.
+   Das Magenta steckt in der Datei: /public/melody-factory-signet.png
+   ist auf --pink (#e4017e) umgefaerbt. Aendert sich der Farbwert,
+   muss die Datei neu eingefaerbt werden. */
+.signet {
+  --i: -1;
+  width: calc(61 * var(--k));
+  height: auto;
+  flex: none;
+  display: block;
+}
+
 .nav {
   display: flex;
   align-items: center;
@@ -1044,9 +1058,12 @@ a.trailer__frame:focus-visible::after {
 }
 
 @media (max-width: 560px) {
+  /* bleibt auch hier eine Zeile: Wortmarke links, Signet rechts.
+     Gestapelt stuenden beide links untereinander und das Signet
+     waere nicht mehr die Ecke, die es sein soll. */
   .header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 12px;
     padding: 18px 18px 0;
   }
