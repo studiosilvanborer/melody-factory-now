@@ -42,18 +42,16 @@ export function Hero({page}: {page: EventPageData}) {
           {page.logoText}
         </Link>
 
-        {/* Signet gegenueber der Wortmarke. Ohne alt-Text: die Wortmarke
-            links sagt denselben Namen schon, zweimal «Melody Factory»
-            nacheinander waere fuer Vorlesesoftware nur Laerm.
+        {/* Partnerlogo gegenueber der Wortmarke.
             Kein next/image: die Datei liegt fertig in /public und ist
             kleiner als der Aufwand, sie unterwegs umzurechnen. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          className="signet on-load"
-          src="/melody-factory-signet.png"
-          width={300}
-          height={321}
-          alt=""
+          className="partner-logo on-load"
+          src="/3fach-logo.png"
+          width={673}
+          height={300}
+          alt="3FACH"
         />
       </header>
 

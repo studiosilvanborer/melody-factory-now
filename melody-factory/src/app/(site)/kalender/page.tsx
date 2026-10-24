@@ -80,15 +80,14 @@ async function PageContent({mode}: {mode: FetchMode}) {
         </Link>
 
         {/* Dieselbe Ecke wie auf der Startseite, dieselbe Datei – hier
-            aber schwarz, weil sie auf der Magentaflaeche steht.
-            Ohne alt-Text: die Wortmarke links sagt denselben Namen. */}
+            aber schwarz, weil sie auf der Magentaflaeche steht. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          className="signet"
-          src="/melody-factory-signet.png"
-          width={300}
-          height={321}
-          alt=""
+          className="partner-logo"
+          src="/3fach-logo.png"
+          width={673}
+          height={300}
+          alt="3FACH"
         />
       </header>
 

@@ -404,15 +404,15 @@ a {
   white-space: nowrap;
 }
 
-/* Das Signet sitzt in der rechten oberen Ecke, auf gleicher Hoehe wie
-   die Wortmarke. Die Breite kommt aus der Originaldatei (61 x 65) und
+/* Das Partnerlogo sitzt in der rechten oberen Ecke, auf gleicher Hoehe
+   wie die Wortmarke. Es ist breit statt hoch (673 x 300), die Breite
    waechst mit --k wie alles andere mit.
-   Das Magenta steckt in der Datei: /public/melody-factory-signet.png
-   ist auf --pink (#e4017e) umgefaerbt. Aendert sich der Farbwert,
-   muss die Datei neu eingefaerbt werden. */
-.signet {
+   Das Magenta steckt in der Datei: /public/3fach-logo.png ist auf
+   --pink (#e4017e) umgefaerbt. Aendert sich der Farbwert, muss die
+   Datei neu eingefaerbt werden. */
+.partner-logo {
   --i: -1;
-  width: calc(61 * var(--k));
+  width: calc(140 * var(--k));
   height: auto;
   flex: none;
   display: block;
@@ -736,11 +736,11 @@ a.trailer__frame:focus-visible::after {
   padding: 0 var(--gutter);
 }
 
-/* Auf der Magentafläche muss das Signet schwarz sein wie die Schrift
-   daneben. brightness(0) nimmt der Datei die Farbe und lässt die
-   weichen Kanten unberührt – so bleibt es bei einer Bilddatei für
+/* Auf der Magentafläche muss das Partnerlogo schwarz sein wie die
+   Schrift daneben. brightness(0) nimmt der Datei die Farbe und lässt
+   die weichen Kanten unberührt – so bleibt es bei einer Bilddatei für
    beide Seiten. */
-.subhead .signet {
+.subhead .partner-logo {
   filter: brightness(0);
 }
 
@@ -1070,8 +1070,8 @@ a.trailer__frame:focus-visible::after {
 }
 
 @media (max-width: 560px) {
-  /* bleibt auch hier eine Zeile: Wortmarke links, Signet rechts.
-     Gestapelt stuenden beide links untereinander und das Signet
+  /* bleibt auch hier eine Zeile: Wortmarke links, Partnerlogo rechts.
+     Gestapelt stuenden beide links untereinander und das Logo
      waere nicht mehr die Ecke, die es sein soll. */
   .header {
     flex-wrap: nowrap;
