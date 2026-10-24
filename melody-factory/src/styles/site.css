@@ -412,7 +412,7 @@ a {
    Datei neu eingefaerbt werden. */
 .partner-logo {
   --i: -1;
-  width: calc(140 * var(--k));
+  width: calc(98 * var(--k));
   height: auto;
   flex: none;
   display: block;
@@ -1078,6 +1078,13 @@ a.trailer__frame:focus-visible::after {
     align-items: center;
     gap: 12px;
     padding: 18px 18px 0;
+  }
+
+  /* --k steht schmal auf seinem Minimum, das Logo wuerde also mit dem
+     Bildschirm nicht mitschrumpfen, sondern nur klein bleiben. Hier
+     deshalb die groessere Breite von vor der Desktop-Verkleinerung. */
+  .partner-logo {
+    width: calc(140 * var(--k));
   }
 
   .nav {
