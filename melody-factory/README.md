@@ -5,6 +5,8 @@ Die Eventseite als Next.js-Projekt mit eingebauter Pflege-Oberfläche.
 | | |
 |---|---|
 | Seite | `/` |
+| Termine | `/kalender` |
+| Newsletter-Anmeldung | `/newsletter` |
 | Pflege-Oberfläche | `/studio` |
 | Inhalte | Sanity, Projekt `beatt88f`, Dataset `production` |
 
@@ -75,6 +77,7 @@ Aufgeteilt in Reiter, die der Leserichtung der Seite folgen:
 | **Infos** | Spaltentitel, Fliesstext mit Fett-Auszeichnung, Schlusszeile |
 | **Trailer** | Spaltentitel, Video-Datei zum Hochladen *oder* YouTube-/Vimeo-Link, Hinweistext solange keines von beidem hinterlegt ist |
 | **Footer** | Linkspalten, Ticket-Aufruf, grosse Wortmarke, rechtliche Zeile |
+| **Newsletter** | Titel und Text der Seite `/newsletter`, Beschriftung der Schaltfläche |
 | **Suchmaschinen & Social** | Browser-Titel, Beschreibung, Titel/Text/Bild für geteilte Links |
 
 Drei Dinge, die der Pflege Arbeit und Fehler ersparen:
@@ -125,6 +128,30 @@ auch wenn die Liste über mehrere Monate läuft.
 Den Weg zur Seite legen zwei Stellen: die Schaltfläche oben rechts im
 Hero (*Inhalte der Seite* → *Hero* → *Schaltfläche oben rechts*) und ein
 Footer-Link mit dem Ziel `/kalender` in einer der Linkspalten.
+
+### Newsletter
+
+Die Anmeldung steht an zwei Stellen, und beide öffnen dasselbe Formular:
+
+**Der Knopf im Footer**, auf jeder Seite, unter dem Ticket-Aufruf.
+
+**Die Seite `/newsletter`**, damit sich der Link allein verschicken lässt –
+per WhatsApp, in einer Mail, auf Instagram. Sie zeigt Titel, Text und den
+Knopf, und das Formular kommt dort auch von allein: im MailerLite-Konto
+steht als Auslöser «nach 5 Sekunden», und das gilt auf jeder Seite. Wer
+dem Link folgt, bekommt die Anmeldung also ohne einen Klick; der Knopf
+ist für alle, die sie weggeklickt haben. Gepflegt wird die Seite unter
+*Inhalte der Seite* → Reiter **Newsletter**.
+
+Den Weg dorthin legt ein Footer-Link mit dem Ziel `/newsletter` in einer
+der Linkspalten.
+
+**Das Formular selbst gehört MailerLite.** Felder, Einwilligungstext,
+Bestätigungsmail und Abmeldung werden dort gepflegt, nicht hier – so
+steht alles, was rechtlich zählt, an einer Stelle. In diesem Projekt
+stehen nur die beiden technischen Kennungen, in `src/lib/mailerlite.ts`:
+die Konto-ID und die des Formulars. Sie ändern sich nur, wenn im
+MailerLite-Konto ein neues Formular angelegt wird.
 
 ### Vorschau
 
@@ -191,6 +218,7 @@ src/
     (site)/layout.tsx         Schriften, CSS, Metadaten, Live-Anbindung
     (site)/page.tsx           die Startseite
     (site)/kalender/page.tsx  die Terminliste unter /kalender
+    (site)/newsletter/page.tsx  die Anmeldung unter /newsletter
     studio/[[...tool]]/       die Pflege-Oberfläche
     api/draft-mode/enable/    schaltet die Vorschau ein
   components/                 Hero, Sektionen, Kalender, Fliesstext, die zwei Skripte
@@ -207,8 +235,9 @@ src/
 `src/styles/site.css` ist das handgesetzte CSS aus `index.html`, Zeile für
 Zeile übernommen: die Tokens, das `--k`-Hero-Raster, die clamp-Skalen.
 Hinzu kamen nur zwei Abschnitte: § 10, weil aus dem CMS mehrere Absätze
-kommen können, wo im Entwurf einer stand – und der Kalender-Block in § 5,
-der für die Unterseite dieselben Tokens weiterverwendet.
+kommen können, wo im Entwurf einer stand – und die beiden Blöcke der
+Unterseiten in § 5 (Kalender, Newsletter), die dieselben Tokens
+weiterverwenden.
 
 Darum auch kein Tailwind in diesem Projekt: dessen Preflight würde dieser
 Abstimmung ins Handwerk fahren, und zu gewinnen gäbe es nichts – die Seite

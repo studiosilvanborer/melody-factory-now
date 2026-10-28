@@ -3,6 +3,7 @@ import {defineField, defineType} from 'sanity'
 import {CalendarIcon} from '@sanity/icons/Calendar'
 import {DocumentVideoIcon} from '@sanity/icons/DocumentVideo'
 import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
+import {EnvelopeIcon} from '@sanity/icons/Envelope'
 import {ImageIcon} from '@sanity/icons/Image'
 import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
 import {OlistIcon} from '@sanity/icons/Olist'
@@ -37,6 +38,7 @@ export const eventPage = defineType({
     {name: 'infos', title: 'Infos', icon: InfoOutlineIcon},
     {name: 'trailer', title: 'Trailer', icon: DocumentVideoIcon},
     {name: 'footer', title: 'Footer', icon: EarthGlobeIcon},
+    {name: 'newsletter', title: 'Newsletter', icon: EnvelopeIcon},
     {name: 'seo', title: 'Suchmaschinen & Social', icon: SearchIcon},
   ],
 
@@ -389,16 +391,6 @@ export const eventPage = defineType({
       validation: (rule) => rule.required().max(60),
     }),
     defineField({
-      name: 'newsletterLabel',
-      title: 'Newsletter-Schaltfläche',
-      type: 'string',
-      group: 'footer',
-      description:
-        'Öffnet das Anmeldeformular von MailerLite. Leer lassen, und die Schaltfläche verschwindet – das Pop-up erscheint weiterhin, es wird nur nicht von Hand aufgerufen.',
-      initialValue: 'Newsletter abonnieren',
-      validation: (rule) => rule.max(40),
-    }),
-    defineField({
       name: 'footerWordmark',
       title: 'Grosse Wortmarke im Footer',
       type: 'string',
@@ -413,6 +405,39 @@ export const eventPage = defineType({
       group: 'footer',
       initialValue: '© 2026 Melody Factory. All rights reserved.',
       validation: (rule) => rule.required().max(120),
+    }),
+
+    /* ── Newsletter ────────────────────────────────────────────────── */
+    /* Die drei Felder der Seite /newsletter. Sie steht fuer sich, damit
+       der Link allein verschickt werden kann – und sie bringt dieselbe
+       Anmeldung wie der Knopf im Footer, nur mit Platz fuer einen Satz
+       darueber, warum man sie ausfuellen soll. */
+    defineField({
+      name: 'newsletterTitle',
+      title: 'Titel der Seite',
+      type: 'string',
+      group: 'newsletter',
+      description: 'Die Überschrift auf /newsletter – der Seite, deren Link man verschicken kann.',
+      initialValue: 'Newsletter',
+      validation: (rule) => rule.required().max(60),
+    }),
+    defineField({
+      name: 'newsletterLead',
+      title: 'Text unter dem Titel',
+      type: 'richText',
+      group: 'newsletter',
+      description:
+        'Was im Newsletter steht und wie oft er kommt. Der Hinweis auf die Bestätigungsmail gehört hierher: MailerLite verschickt eine, bevor jemand eingetragen ist.',
+    }),
+    defineField({
+      name: 'newsletterLabel',
+      title: 'Beschriftung der Schaltfläche',
+      type: 'string',
+      group: 'newsletter',
+      description:
+        'Öffnet das Anmeldeformular von MailerLite – unten im Footer jeder Seite und auf /newsletter. Leer lassen, und der Knopf im Footer verschwindet; auf /newsletter steht dann «Newsletter abonnieren», weil die Seite ohne ihn zwecklos wäre.',
+      initialValue: 'Newsletter abonnieren',
+      validation: (rule) => rule.max(40),
     }),
 
     /* ── Suchmaschinen & Social ────────────────────────────────────── */

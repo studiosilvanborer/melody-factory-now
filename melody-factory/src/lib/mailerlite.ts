@@ -11,7 +11,15 @@
 /** Konto-ID aus dem Universal-Snippet. */
 export const MAILERLITE_ACCOUNT_ID = '2708824'
 
-/** Das Formular, das die Schaltflaeche im Footer oeffnet. */
+/**
+ * Das Formular, das die Schaltflaechen oeffnen – im Footer und auf
+ * /newsletter. Ein Pop-up-Formular: MailerLite zeigt es ueber der Seite
+ * an, nicht in ihr. Soll es eines Tages fest in der Seite stehen, braucht
+ * es im MailerLite-Konto ein Formular vom Typ «Embedded» und hier ein
+ * <div className="ml-embedded" data-form="…"> – universal.js fuellt es
+ * dann selbst. Nur: das Pop-up pflegt der Kunde schon, und zwei
+ * Formulare fuer dieselbe Anmeldung waeren eine Fehlerquelle mehr.
+ */
 export const MAILERLITE_FORM_ID = 'xbRCOL'
 
 declare global {

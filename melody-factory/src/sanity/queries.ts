@@ -50,6 +50,9 @@ export const EVENT_PAGE_QUERY = defineQuery(`
     footerWordmark,
     footerLegal,
 
+    newsletterTitle,
+    newsletterLead,
+
     metaTitle,
     metaDescription,
     shareTitle,

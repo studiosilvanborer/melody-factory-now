@@ -92,7 +92,7 @@ const footerLinkColumns = [
   ],
   [
     {label: 'Kontakt', href: 'mailto:info@melodyfactory.ch'},
-    {label: 'Newsletter', href: '#newsletter'},
+    {label: 'Newsletter', href: '/newsletter'},
   ],
   [
     {label: 'Instagram', href: 'https://www.instagram.com/'},
@@ -176,9 +176,19 @@ const content = {
 
   footerLinkColumns: withKeys(footerLinkColumns),
   ctaTitle: 'Hol dir jetzt Tickets!',
-  newsletterLabel: 'Newsletter abonnieren',
   footerWordmark: 'Melody Factory',
   footerLegal: '© 2026 Melody Factory. All rights reserved.',
+
+  newsletterTitle: 'Newsletter',
+  newsletterLead: [
+    block(
+      'Ein paar Mal im Jahr, wenn es etwas zu erzählen gibt: neue Termine, Blicke hinter die Bühne, Vorverkauf, bevor er öffentlich ist.',
+    ),
+    block(
+      'Adresse eintragen, und wir schicken eine E-Mail zur Bestätigung – erst mit dem Klick darin bist du dabei. Abmelden geht jederzeit mit einem Klick.',
+    ),
+  ],
+  newsletterLabel: 'Newsletter abonnieren',
 
   metaTitle: 'NOW! – Melody Factory, KKL Luzern',
   metaDescription:

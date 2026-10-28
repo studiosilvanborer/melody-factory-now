@@ -26,13 +26,24 @@ const onServer = () => false
  * schlimmer als keiner. Dieselbe Ueberlegung wie bei RevealOnScroll: was
  * an JavaScript haengt, erscheint erst, wenn JavaScript da ist.
  *
+ * Die Klasse kommt von aussen, weil derselbe Knopf an zwei Stellen in
+ * zwei Gestalten steht: im Footer als schlichte Zeile (cta__newsletter),
+ * auf /newsletter als Pille (btn). Zwei Komponenten dafuer waeren zwei
+ * Stellen, an denen derselbe Aufruf von Hand stimmen muesste.
+ *
  * useSyncExternalStore und nicht ein Zustand im Effect: React liest beim
  * Rendern auf dem Server onServer, nach der Hydration onClient, und
  * rendert von selbst neu. Ein setState im Effect taete dasselbe, loest
  * aber eine zweite Renderrunde aus – die Lint-Regel
  * react-hooks/set-state-in-effect zeigt genau darauf.
  */
-export function NewsletterButton({label}: {label: string}) {
+export function NewsletterButton({
+  label,
+  className = 'cta__newsletter',
+}: {
+  label: string
+  className?: string
+}) {
   const ready = useSyncExternalStore(noSubscribe, onClient, onServer)
 
   if (!ready) return null
@@ -40,7 +51,7 @@ export function NewsletterButton({label}: {label: string}) {
   return (
     <button
       type="button"
-      className="cta__newsletter"
+      className={className}
       onClick={() => window.ml?.('show', MAILERLITE_FORM_ID, true)}
     >
       {label}

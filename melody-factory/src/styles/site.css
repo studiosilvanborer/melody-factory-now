@@ -171,6 +171,16 @@ a {
   border-radius: var(--radius-pill);
   background: var(--btn-bg);
   color: var(--btn-fg);
+  /* Dieselbe Pille auch auf einem <button> – auf /newsletter ist sie
+     einer, weil sie kein Ziel hat, sondern ein Formular oeffnet. Der
+     Browser gibt Knöpfen von sich aus Rahmen und eine eigene Schrift
+     mit, die von der Seite nichts weiss; beides muss weg, sonst steht
+     die Beschriftung in 13px Arial in einer viel zu grossen Pille. */
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -835,6 +845,42 @@ a.trailer__frame:focus-visible::after {
   margin: 0;
   padding-top: var(--sp-s);
   border-top: var(--rule-w) solid currentColor;
+}
+
+/* --- Newsletter (Unterseite /newsletter) ------------------------- */
+/* Dieselbe Magentafläche und dasselbe Linienmotiv wie beim Kalender:
+   Titel, dicke Linie, darunter der Inhalt. Nur ist es hier kein Raster,
+   sondern ein Satz und ein Knopf – also eine Spalte in Lesebreite,
+   nicht über die ganze Seite. */
+.news__title {
+  font-size: var(--fs-5);
+  margin-bottom: var(--sp-s);
+}
+
+.news__body {
+  max-width: var(--measure);
+  padding-top: var(--sp-s);
+  border-top: var(--rule-w) solid currentColor;
+}
+
+.news__lead {
+  margin: 0;
+  font-size: var(--fs-1);
+  text-wrap: pretty;
+}
+
+/* Mehrere Absätze sind möglich, weil der Text aus dem CMS kommt – und
+   dann brauchen sie Luft zwischen sich. */
+.news__lead + .news__lead {
+  margin-top: var(--sp-s);
+}
+
+/* Die Pille steht in einem <p>, damit sie auf eigener Zeile sitzt und
+   nicht am Text klebt. Eine Stufe grösser als der Lead: sie ist das
+   Ziel dieser Seite, und es soll keine Suche geben, wo man klickt. */
+.news__action {
+  margin: var(--sp-m) 0 0;
+  font-size: var(--fs-2);
 }
 
 /* --- Footer ------------------------------------------------------ */
