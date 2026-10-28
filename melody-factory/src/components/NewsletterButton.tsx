@@ -13,7 +13,9 @@ const onServer = () => false
 
 /**
  * Ruft das MailerLite-Formular von Hand auf – der zweite Weg neben dem
- * Pop-up, das von allein kommt.
+ * Pop-up, das auf /newsletter nach fuenf Sekunden von allein kommt. Die
+ * eine Stelle, an der er steht: die Pille auf eben dieser Seite. Der
+ * Aufruf im Footer ist ein Link dorthin, kein Knopf.
  *
  * Das Snippet von MailerLite steht dort als onclick="ml('show', …)" im
  * HTML. So geht es in React nicht: onclick als Attribut wird nicht
@@ -26,24 +28,13 @@ const onServer = () => false
  * schlimmer als keiner. Dieselbe Ueberlegung wie bei RevealOnScroll: was
  * an JavaScript haengt, erscheint erst, wenn JavaScript da ist.
  *
- * Die Klasse kommt von aussen, weil derselbe Knopf an zwei Stellen in
- * zwei Gestalten steht: im Footer als schlichte Zeile (cta__newsletter),
- * auf /newsletter als Pille (btn). Zwei Komponenten dafuer waeren zwei
- * Stellen, an denen derselbe Aufruf von Hand stimmen muesste.
- *
  * useSyncExternalStore und nicht ein Zustand im Effect: React liest beim
  * Rendern auf dem Server onServer, nach der Hydration onClient, und
  * rendert von selbst neu. Ein setState im Effect taete dasselbe, loest
  * aber eine zweite Renderrunde aus – die Lint-Regel
  * react-hooks/set-state-in-effect zeigt genau darauf.
  */
-export function NewsletterButton({
-  label,
-  className = 'cta__newsletter',
-}: {
-  label: string
-  className?: string
-}) {
+export function NewsletterButton({label}: {label: string}) {
   const ready = useSyncExternalStore(noSubscribe, onClient, onServer)
 
   if (!ready) return null
@@ -51,7 +42,7 @@ export function NewsletterButton({
   return (
     <button
       type="button"
-      className={className}
+      className="btn"
       onClick={() => window.ml?.('show', MAILERLITE_FORM_ID, true)}
     >
       {label}

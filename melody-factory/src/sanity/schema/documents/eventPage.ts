@@ -435,7 +435,7 @@ export const eventPage = defineType({
       type: 'string',
       group: 'newsletter',
       description:
-        'Öffnet das Anmeldeformular von MailerLite – unten im Footer jeder Seite und auf /newsletter. Leer lassen, und der Knopf im Footer verschwindet; auf /newsletter steht dann «Newsletter abonnieren», weil die Seite ohne ihn zwecklos wäre.',
+        'Steht an zwei Stellen: unten im Footer jeder Seite als Zeile, die hierher führt, und auf dieser Seite als Knopf, der das Anmeldeformular von MailerLite öffnet. Leer lassen, und die Zeile im Footer verschwindet; auf /newsletter steht dann «Newsletter abonnieren», weil die Seite ohne den Knopf zwecklos wäre.',
       initialValue: 'Newsletter abonnieren',
       validation: (rule) => rule.max(40),
     }),

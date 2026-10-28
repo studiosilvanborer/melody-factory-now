@@ -1,6 +1,5 @@
 import Link from 'next/link'
 
-import {NewsletterButton} from '@/components/NewsletterButton'
 import {RichText} from '@/components/RichText'
 import {embedUrl, formatDate, formatTime, isExternal} from '@/lib/format'
 import type {CastMember, EventPageData, Fact, FooterLink} from '@/sanity/types'
@@ -162,9 +161,19 @@ export function SiteFooter({page}: {page: EventPageData}) {
           {/* Der Newsletter steht unter dem Ticketkauf und nicht neben
               ihm: zwei Pillen nebeneinander lasen sich wie zwei gleich
               wichtige Ziele. Als schlichte Zeile bleibt er der zweite
-              Weg, erkennbar aber nachgeordnet. */}
+              Weg, erkennbar aber nachgeordnet.
+
+              Er fuehrt auf /newsletter und oeffnet nicht mehr selbst das
+              Formular: ein Pop-up ueber dem Seitenfuss kam aus dem
+              Nichts, die Seite dagegen sagt erst, worum es geht. Und was
+              man anklickt, kann man weiterschicken.
+
+              prefetch aus, wie bei den Links darunter – lieber eine
+              Anfrage mehr als ein veralteter Stand beim Klick. */}
           {page.newsletterLabel ? (
-            <NewsletterButton label={page.newsletterLabel} />
+            <Link className="cta__newsletter" href="/newsletter" prefetch={false}>
+              {page.newsletterLabel}
+            </Link>
           ) : null}
         </div>
       </div>

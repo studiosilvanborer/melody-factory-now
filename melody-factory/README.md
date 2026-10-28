@@ -131,20 +131,20 @@ Footer-Link mit dem Ziel `/kalender` in einer der Linkspalten.
 
 ### Newsletter
 
-Die Anmeldung steht an zwei Stellen, und beide öffnen dasselbe Formular:
+Die Anmeldung hat eine Adresse: **`/newsletter`**. Damit lässt sich der
+Link allein verschicken – per WhatsApp, in einer Mail, auf Instagram. Die
+Seite zeigt Titel, Text und den Knopf, der das Formular von MailerLite
+öffnet; und das Formular kommt dort auch von allein, weil im
+MailerLite-Konto «nach 5 Sekunden» als Auslöser steht. Wer dem Link
+folgt, bekommt die Anmeldung also ohne einen Klick; der Knopf ist für
+alle, die sie weggeklickt haben. Gepflegt wird die Seite unter *Inhalte
+der Seite* → Reiter **Newsletter**.
 
-**Der Knopf im Footer**, auf jeder Seite, unter dem Ticket-Aufruf.
-
-**Die Seite `/newsletter`**, damit sich der Link allein verschicken lässt –
-per WhatsApp, in einer Mail, auf Instagram. Sie zeigt Titel, Text und den
-Knopf, und das Formular kommt dort auch von allein: im MailerLite-Konto
-steht als Auslöser «nach 5 Sekunden», und das gilt auf jeder Seite. Wer
-dem Link folgt, bekommt die Anmeldung also ohne einen Klick; der Knopf
-ist für alle, die sie weggeklickt haben. Gepflegt wird die Seite unter
-*Inhalte der Seite* → Reiter **Newsletter**.
-
-Den Weg dorthin legt ein Footer-Link mit dem Ziel `/newsletter` in einer
-der Linkspalten.
+Zwei Wege führen von jeder Seite dorthin: die Zeile *Newsletter
+abonnieren* im Footer unter dem Ticket-Aufruf, und ein Footer-Link mit
+dem Ziel `/newsletter` in einer der Linkspalten. Beides sind Links auf
+die Seite – ein Pop-up über dem Seitenfuss kam aus dem Nichts, die Seite
+dagegen sagt erst, worum es geht.
 
 **Das Formular selbst gehört MailerLite.** Felder, Einwilligungstext,
 Bestätigungsmail und Abmeldung werden dort gepflegt, nicht hier – so

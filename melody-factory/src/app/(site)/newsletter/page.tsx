@@ -103,10 +103,7 @@ async function PageContent({mode}: {mode: FetchMode}) {
           <RichText value={page.newsletterLead} className="news__lead" />
 
           <p className="news__action reveal">
-            <NewsletterButton
-              className="btn"
-              label={page.newsletterLabel || FALLBACK.label}
-            />
+            <NewsletterButton label={page.newsletterLabel || FALLBACK.label} />
           </p>
 
           {/* Der Knopf erscheint erst nach der Hydration – ohne
