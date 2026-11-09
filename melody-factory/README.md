@@ -69,24 +69,31 @@ Aufgeteilt in Reiter, die der Leserichtung der Seite folgen:
 
 | Reiter | Inhalt |
 |---|---|
-| **Hero** | Hintergrundbild samt Bildausschnitt und Bildbeschreibung, Wortmarke oben links, Schaltfläche oben rechts (zur Terminliste; leer = ausgeblendet), beide Claim-Zeilen, die grosse Wortmarke |
+| **Hero** | Hintergrundbild samt Bildausschnitt und Bildbeschreibung, Wortmarke oben links, Schaltfläche oben rechts (zur Terminliste; leer = ausgeblendet), beide Claim-Zeilen, der Produktionstitel im Bild (leer = ausgeblendet), die grosse Wortmarke |
 | **Veranstaltung** | Datum und Beginn, Ort (kurz / ausgeschrieben), Stadt, Dauer, weitere Informationen, Ticket-Link und dessen Beschriftung |
 | **Intro** | Sektionstitel und der zentrierte Lead (kursiv für Komponistennamen) |
-| **Zeit / Ort** | Spaltentitel, die drei Bezeichnungen, beliebig viele zusätzliche Angaben |
+| **Informationen** | Spaltentitel, die vier Bezeichnungen, beliebig viele zusätzliche Angaben (Preise, Altersempfehlung, …) |
 | **Besetzung** | Liste aus Instrument und Name, per Ziehen sortierbar |
-| **Infos** | Spaltentitel, Fliesstext mit Fett-Auszeichnung, Schlusszeile |
-| **Trailer** | Spaltentitel, Video-Datei zum Hochladen *oder* YouTube-/Vimeo-Link, Hinweistext solange keines von beidem hinterlegt ist |
+| **Programm** | Spaltentitel, Fliesstext mit Fett-Auszeichnung, Schlusszeile |
+| **Trailer** | Schalter «Trailer zeigen», Spaltentitel, Video-Datei zum Hochladen *oder* YouTube-/Vimeo-Link, Hinweistext solange keines von beidem hinterlegt ist |
 | **Footer** | Linkspalten, Ticket-Aufruf, grosse Wortmarke, rechtliche Zeile |
 | **Newsletter** | Titel und Text der Seite `/newsletter`, Beschriftung der Schaltfläche |
 | **Suchmaschinen & Social** | Browser-Titel, Beschreibung, Titel/Text/Bild für geteilte Links |
 
-Drei Dinge, die der Pflege Arbeit und Fehler ersparen:
+Vier Dinge, die der Pflege Arbeit und Fehler ersparen:
 
 **Datum, Ort und Ticket-Link stehen genau einmal.** Sie erscheinen auf
-der Seite an drei Stellen – im Hero, bei «Zeit / Ort» und im Ticket-Aufruf
-im Footer – aber gepflegt werden sie nur im Reiter *Veranstaltung*. Das
-Datum kann also nie an einer Stelle alt werden. «7. November 2026» und
-«20:00 Uhr» rechnet die Seite selbst aus dem Datumsfeld, in Zürcher Zeit.
+der Seite an drei Stellen – im Hero, in der Spalte «Informationen» und im
+Ticket-Aufruf im Footer – aber gepflegt werden sie nur im Reiter
+*Veranstaltung*. Das Datum kann also nie an einer Stelle alt werden.
+«19. Dezember 2026», «Samstag, 19. Dezember 2026» und «20:00 Uhr» rechnet
+die Seite selbst aus dem Datumsfeld, in Zürcher Zeit.
+
+**Der Trailer lässt sich ganz abschalten.** Nicht jede Produktion hat
+einen; dann ist ein leerer Rahmen neben dem Programmtext eine Lücke und
+kein Versprechen. Steht *Trailer zeigen* auf aus, fällt die ganze Spalte
+weg und der Programmtext bekommt die Sektion für sich. Video und Link
+bleiben dabei erhalten – der Schalter zeigt sie wieder.
 
 **Das Video bestimmt seine Form selbst.** Ein hochgeladenes Video wird
 gezeigt, wie es ist – Hochformat wie Querformat, der Rahmen passt sich
@@ -152,6 +159,23 @@ steht alles, was rechtlich zählt, an einer Stelle. In diesem Projekt
 stehen nur die beiden technischen Kennungen, in `src/lib/mailerlite.ts`:
 die Konto-ID und die des Formulars. Sie ändern sich nur, wenn im
 MailerLite-Konto ein neues Formular angelegt wird.
+
+**Darum gehört auch die Interessenfrage dorthin.** Wer wissen will, ob
+sich jemand für Kinderkonzerte interessiert, fragt im Formular selbst
+danach – nicht auf dieser Seite. In MailerLite: *Forms* → das Pop-up
+`xbRCOL` → *Design* → ein Feld vom Typ **Checkbox** oder
+**Radio buttons** mit der Frage als Beschriftung; darunter unter
+*Subscriber groups* die Gruppe wählen, der die Antwort jemanden
+zuordnen soll (bei einer Checkbox reicht eine Gruppe
+«Kinderkonzerte», bei Radio buttons eine je Antwort). Wer zustimmt,
+landet mit dem Absenden automatisch in dieser Gruppe – ohne Deploy,
+ohne Code, und die Antwort steht neben der Adresse, zu der sie gehört.
+
+Zwei Gründe, es nicht hier zu bauen: ein eigenes Formular auf dieser
+Seite müsste Einwilligung, Bestätigungsmail und Abmeldung selbst
+führen – also genau das, was bei MailerLite schon steht und rechtlich
+zählt. Und es bräuchte einen API-Schlüssel im Projekt, der heute nicht
+nötig ist.
 
 ### Vorschau
 

@@ -1,7 +1,13 @@
 import Link from 'next/link'
 
 import {RichText} from '@/components/RichText'
-import {embedUrl, formatDate, formatTime, isExternal} from '@/lib/format'
+import {
+  embedUrl,
+  formatDate,
+  formatLongDate,
+  formatTime,
+  isExternal,
+} from '@/lib/format'
 import type {CastMember, EventPageData, Fact, FooterLink} from '@/sanity/types'
 
 /** Eine Zeile «Bezeichnung · Angabe». */
@@ -23,15 +29,29 @@ export function IntroSection({page}: {page: EventPageData}) {
   )
 }
 
-/** «Zeit / Ort» und «Besetzung» stehen im selben zweispaltigen Block. */
+/** «Informationen» und «Besetzung» stehen im selben zweispaltigen Block. */
 export function FactsAndCastSection({page}: {page: EventPageData}) {
+  // Datum und Beginn stehen zuoberst und werden gerechnet, nicht
+  // gepflegt: sie kommen aus demselben einen Feld wie Hero und Footer
+  // und koennen hier darum nicht veralten.
+  //
+  // Die weiteren Informationen stehen zuunterst, nach den zusaetzlichen
+  // Angaben. Sie sind der einzige Fliesstext der Spalte – zwischen den
+  // kurzen Paaren brauechen Preise und Altersempfehlung danach einen
+  // zweiten Anlauf.
   const facts: Fact[] = [
+    {
+      label: page.labelDate,
+      value: [formatLongDate(page.startsAt), formatTime(page.startsAt)]
+        .filter(Boolean)
+        .join(', '),
+    },
     {label: page.labelDuration, value: page.duration},
     {label: page.labelVenue, value: page.venueFull},
+    ...(page.additionalFacts ?? []),
     ...(page.additionalInfo
       ? [{label: page.labelAdditionalInfo, value: page.additionalInfo}]
       : []),
-    ...(page.additionalFacts ?? []),
   ]
 
   // Die Besetzung laeuft ueber zwei Spalten. Bei ungerader Anzahl ist die
@@ -73,7 +93,13 @@ export function FactsAndCastSection({page}: {page: EventPageData}) {
   )
 }
 
-/** «Infos» und «Trailer» teilen sich den zweiten zweispaltigen Block. */
+/**
+ * «Programm» und «Trailer» teilen sich den zweiten zweispaltigen Block
+ * – solange es einen Trailer gibt. Steht der Schalter im Studio auf
+ * aus, faellt die rechte Spalte weg und der Programmtext steht allein;
+ * die Sektion wird dann einspaltig (siehe `.cols:has(.col:only-child)`
+ * im CSS), damit keine halbe leere Flaeche danebensteht.
+ */
 export function InfosAndTrailerSection({page}: {page: EventPageData}) {
   // Eine hochgeladene Datei schlaegt den Link: wer eine hinterlegt, meint
   // sie auch. Der Link bleibt fuer YouTube und Vimeo.
@@ -90,37 +116,39 @@ export function InfosAndTrailerSection({page}: {page: EventPageData}) {
         ) : null}
       </div>
 
-      <div className="col">
-        <h3 className="h-serif col__title reveal">{page.trailerTitle}</h3>
-        {file ? (
-          /* Das eigene Video bringt sein Format selbst mit – der Rahmen
-             legt ihm keines auf, sonst schnitte er ein Hochformat auf
-             16:9 zurecht und zeigte vom Bild nur einen Streifen. */
-          <div className="trailer__frame trailer__frame--native reveal">
-            <video
-              src={file}
-              controls
-              playsInline
-              preload="metadata"
-              title={`${page.trailerTitle} – ${page.wordmark}`}
-            />
-          </div>
-        ) : (
-          <div className="trailer__frame reveal">
-            {embed ? (
-              <iframe
-                src={embed}
+      {page.showTrailer ? (
+        <div className="col">
+          <h3 className="h-serif col__title reveal">{page.trailerTitle}</h3>
+          {file ? (
+            /* Das eigene Video bringt sein Format selbst mit – der Rahmen
+               legt ihm keines auf, sonst schnitte er ein Hochformat auf
+               16:9 zurecht und zeigte vom Bild nur einen Streifen. */
+            <div className="trailer__frame trailer__frame--native reveal">
+              <video
+                src={file}
+                controls
+                playsInline
+                preload="metadata"
                 title={`${page.trailerTitle} – ${page.wordmark}`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
               />
-            ) : (
-              <span className="visually-hidden">{page.trailerPlaceholder}</span>
-            )}
-          </div>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div className="trailer__frame reveal">
+              {embed ? (
+                <iframe
+                  src={embed}
+                  title={`${page.trailerTitle} – ${page.wordmark}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              ) : (
+                <span className="visually-hidden">{page.trailerPlaceholder}</span>
+              )}
+            </div>
+          )}
+        </div>
+      ) : null}
     </section>
   )
 }

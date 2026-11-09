@@ -63,6 +63,14 @@ export function Hero({page}: {page: EventPageData}) {
           <span className="on-load m-claim-2" lang={page.claimLanguage ?? 'en'}>
             {page.claimLine2}
           </span>
+          {/* Der Name der Produktion, unter dem Claim und auf derselben
+              Zeile wie das Datum gegenueber. Kleiner gesetzt als die
+              uebrigen Meta-Zeilen: er benennt den Abend, ohne mit dem
+              Claim und der Wortmarke darunter um die Aufmerksamkeit zu
+              streiten. Ohne Eintrag faellt die Zeile ersatzlos weg. */}
+          {page.productionTitle ? (
+            <span className="on-load m-production">{page.productionTitle}</span>
+          ) : null}
           <span className="on-load m-venue">{page.venueShort}</span>
           <span className="on-load m-city">{page.city}</span>
           <span className="m-break" aria-hidden="true" />

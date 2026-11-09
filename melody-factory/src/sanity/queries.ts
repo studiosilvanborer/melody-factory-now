@@ -11,6 +11,7 @@ export const EVENT_PAGE_QUERY = defineQuery(`
     claimLine1,
     claimLine2,
     claimLanguage,
+    productionTitle,
     calendarLabel,
     wordmark,
 
@@ -27,6 +28,7 @@ export const EVENT_PAGE_QUERY = defineQuery(`
     introLead,
 
     factsTitle,
+    labelDate,
     labelDuration,
     labelVenue,
     labelAdditionalInfo,
@@ -39,6 +41,7 @@ export const EVENT_PAGE_QUERY = defineQuery(`
     infosText,
     infosOutro,
 
+    showTrailer,
     trailerTitle,
     trailerVideo{asset->{_id, url, mimeType}},
     trailerUrl,

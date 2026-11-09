@@ -17,12 +17,12 @@ import {UsersIcon} from '@sanity/icons/Users'
  * Die Seite ist ein Einseiter. Alles auf mehrere Dokumente zu verteilen
  * wuerde den Kunden zum Suchen zwingen, ohne etwas zu gewinnen – also
  * steht alles hier, aufgeteilt in Reiter, die der Leserichtung der Seite
- * folgen: Hero, Veranstaltung, Intro, Zeit/Ort, Besetzung, Infos,
- * Trailer, Footer, Suchmaschinen.
+ * folgen: Hero, Veranstaltung, Intro, Informationen, Besetzung,
+ * Programm, Trailer, Footer, Suchmaschinen.
  *
  * Eine Regel durchzieht das Schema: Datum, Ort und Ticket-Link stehen
  * genau einmal, im Reiter «Veranstaltung». Sie erscheinen auf der Seite
- * an drei Stellen (Hero, Zeit/Ort, Footer) – aber gepflegt werden sie an
+ * an drei Stellen (Hero, Informationen, Footer) – aber gepflegt werden sie an
  * einer. So kann das Datum nie an einer Stelle alt werden.
  */
 export const eventPage = defineType({
@@ -33,9 +33,9 @@ export const eventPage = defineType({
     {name: 'hero', title: 'Hero', icon: ImageIcon, default: true},
     {name: 'event', title: 'Veranstaltung', icon: CalendarIcon},
     {name: 'intro', title: 'Intro', icon: TagIcon},
-    {name: 'facts', title: 'Zeit / Ort', icon: OlistIcon},
+    {name: 'facts', title: 'Informationen', icon: OlistIcon},
     {name: 'cast', title: 'Besetzung', icon: UsersIcon},
-    {name: 'infos', title: 'Infos', icon: InfoOutlineIcon},
+    {name: 'infos', title: 'Programm', icon: InfoOutlineIcon},
     {name: 'trailer', title: 'Trailer', icon: DocumentVideoIcon},
     {name: 'footer', title: 'Footer', icon: EarthGlobeIcon},
     {name: 'newsletter', title: 'Newsletter', icon: EnvelopeIcon},
@@ -107,6 +107,15 @@ export const eventPage = defineType({
       initialValue: 'en',
     }),
     defineField({
+      name: 'productionTitle',
+      title: 'Produktionstitel im Bild',
+      type: 'string',
+      group: 'hero',
+      description:
+        'Die kleine Zeile unten links, unter dem Claim und auf derselben Höhe wie das Datum: der Name der Produktion, z. B. «Nutcracker Rewired». Leer lassen, und die Zeile verschwindet.',
+      validation: (rule) => rule.max(40),
+    }),
+    defineField({
       name: 'calendarLabel',
       title: 'Schaltfläche oben rechts',
       type: 'string',
@@ -134,7 +143,7 @@ export const eventPage = defineType({
       type: 'datetime',
       group: 'event',
       description:
-        'Einmal hier gesetzt, erscheint es im Hero, bei «Zeit / Ort» und im Ticket-Aufruf im Footer. Zeitzone ist Zürich.',
+        'Einmal hier gesetzt, erscheint es im Hero, in der Spalte «Informationen» und im Ticket-Aufruf im Footer. Zeitzone ist Zürich.',
       options: {dateFormat: 'DD. MMMM YYYY', timeFormat: 'HH:mm', timeStep: 15},
       validation: (rule) => rule.required(),
     }),
@@ -160,7 +169,7 @@ export const eventPage = defineType({
       title: 'Ort, ausgeschrieben',
       type: 'string',
       group: 'event',
-      description: 'Fuer «Zeit / Ort» und den Footer – z. B. «KKL Luzern, Auditorium».',
+      description: 'Fuer die Spalte «Informationen» und den Footer – z. B. «KKL Luzern, Auditorium».',
       initialValue: 'KKL Luzern, Auditorium',
       validation: (rule) => rule.required().max(80),
     }),
@@ -178,7 +187,7 @@ export const eventPage = defineType({
       type: 'text',
       rows: 3,
       group: 'event',
-      description: 'Einlass, Rollstuhlplätze und Ähnliches. Erscheint unter «Zeit / Ort».',
+      description: 'Einlass, Rollstuhlplätze und Ähnliches. Erscheint als letzte Zeile der Spalte «Informationen».',
       initialValue:
         'Einlass jeweils 60 Min. vor Vorstellungsbeginn. Rollstuhl und Begleitplätze online erhältlich.',
     }),
@@ -189,7 +198,8 @@ export const eventPage = defineType({
       group: 'event',
       description: 'Hängt an beiden Ticket-Schaltflächen – im Hero und im Footer.',
       validation: (rule) => rule.required().uri({scheme: ['http', 'https']}),
-      initialValue: 'https://www.kkl-luzern.ch/events/now-klassik-neu-erlebt',
+      initialValue:
+        'https://www.kkl-luzern.ch/events/tschaikowskys-nussknacker-in-einem-neuen-klanggewand',
     }),
     defineField({
       name: 'ticketLabel',
@@ -220,13 +230,23 @@ export const eventPage = defineType({
       validation: (rule) => rule.required(),
     }),
 
-    /* ── Zeit / Ort ────────────────────────────────────────────────── */
+    /* ── Informationen ─────────────────────────────────────────────── */
     defineField({
       name: 'factsTitle',
       title: 'Spaltentitel',
       type: 'string',
       group: 'facts',
-      initialValue: 'Zeit / Ort',
+      initialValue: 'Informationen',
+      validation: (rule) => rule.required().max(40),
+    }),
+    defineField({
+      name: 'labelDate',
+      title: 'Bezeichnung für Datum und Beginn',
+      type: 'string',
+      group: 'facts',
+      description:
+        'Die erste Zeile der Spalte. Der Wert dazu wird aus «Veranstaltung» gerechnet – «Samstag, 19. Dezember 2026, 20:00 Uhr».',
+      initialValue: 'Datum',
       validation: (rule) => rule.required().max(40),
     }),
     defineField({
@@ -284,13 +304,13 @@ export const eventPage = defineType({
       validation: (rule) => rule.min(1),
     }),
 
-    /* ── Infos ─────────────────────────────────────────────────────── */
+    /* ── Programm ──────────────────────────────────────────────────── */
     defineField({
       name: 'infosTitle',
       title: 'Spaltentitel',
       type: 'string',
       group: 'infos',
-      initialValue: 'Infos',
+      initialValue: 'Programm',
       validation: (rule) => rule.required().max(40),
     }),
     defineField({
@@ -307,12 +327,27 @@ export const eventPage = defineType({
       title: 'Schlusszeile',
       type: 'string',
       group: 'infos',
-      description: 'Die hervorgehobene Zeile am Ende, z. B. «Wir sehen uns am 7. November!».',
-      initialValue: 'Wir sehen uns am 7. November!',
+      description: 'Die hervorgehobene Zeile am Ende, z. B. «Wir sehen uns am 19. Dezember!».',
+      initialValue: 'Wir sehen uns am 19. Dezember!',
       validation: (rule) => rule.max(120),
     }),
 
-    /* ── Trailer ───────────────────────────────────────────────────── */
+    /* ── Trailer ─────────────────────────────────────────────────────
+       Der Schalter steht vor allen Trailer-Feldern, weil er ueber sie
+       entscheidet. Nicht jede Produktion hat einen Trailer, und ein
+       leerer Rahmen neben dem Programmtext ist dann eine Luecke und
+       kein Versprechen – aus heisst darum: die Spalte faellt weg, der
+       Programmtext steht allein. Hochgeladenes Video und Link bleiben
+       dabei erhalten, nur eben ungezeigt. */
+    defineField({
+      name: 'showTrailer',
+      title: 'Trailer zeigen',
+      type: 'boolean',
+      group: 'trailer',
+      description:
+        'Aus: die ganze Trailer-Spalte verschwindet. An: der Rahmen steht neben dem Programm – mit dem Video, und solange keines hinterlegt ist, mit dem Hinweis unten.',
+      initialValue: true,
+    }),
     defineField({
       name: 'trailerTitle',
       title: 'Spaltentitel',

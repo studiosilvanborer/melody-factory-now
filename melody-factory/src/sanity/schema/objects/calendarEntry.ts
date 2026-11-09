@@ -35,9 +35,10 @@ export const calendarEntry = defineType({
       name: 'production',
       title: 'Produktion',
       type: 'string',
-      description: 'Die fette Zeile darunter – z. B. «NOW!».',
+      description:
+        'Die fette Zeile darunter – z. B. «NOW!» oder «Nutcracker Rewired – Weihnachtliche Familien Matinée».',
       initialValue: 'NOW!',
-      validation: (rule) => rule.required().max(40),
+      validation: (rule) => rule.required().max(80),
     }),
     defineField({
       name: 'ticketUrl',

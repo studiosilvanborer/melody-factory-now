@@ -273,6 +273,15 @@ a {
 .facts .fact:nth-child(7) {
   --i: 6;
 }
+.facts .fact:nth-child(8) {
+  --i: 7;
+}
+.facts .fact:nth-child(9) {
+  --i: 8;
+}
+.facts .fact:nth-child(10) {
+  --i: 9;
+}
 
 /* Fliesstextblöcke steigen flacher auf als die Überschriften */
 .fact,
@@ -390,7 +399,9 @@ a {
 }
 
 /* Ladesequenz: erst die Kopfzeile, dann die Wortmarke,
-   danach die sechs Meta-Zeilen (--i 0 bis 5) */
+   danach die Meta-Zeilen (--i 0 bis 6) – erst die linke Spalte
+   (Claim, Claim, Produktionstitel), dann die rechte (Ort, Stadt,
+   Datum, Zeit) */
 .logo {
   --i: -1;
 }
@@ -506,7 +517,7 @@ a {
 
 /* Offsets in Entwurfs-Pixeln, gemessen ab Oberkante .meta (y = 562) */
 .m-venue {
-  --i: 2;
+  --i: 3;
   top: 0;
   /* proportional verankert, damit der Mittelcluster auch auf sehr
      breiten Viewports mittig bleibt */
@@ -518,7 +529,7 @@ a {
   left: calc(8 * var(--k));
 }
 .m-city {
-  --i: 3;
+  --i: 4;
   top: calc(30 * var(--k));
   right: calc(15 * var(--k));
 }
@@ -528,14 +539,27 @@ a {
   left: calc(72 * var(--k));
 }
 .m-time {
-  --i: 5;
+  --i: 6;
   top: calc(69 * var(--k));
   right: calc(140 * var(--k));
 }
 .m-date {
-  --i: 4;
+  --i: 5;
   top: calc(100 * var(--k));
   left: 55.5%;
+}
+
+/* Der Produktionstitel schliesst die linke Spalte ab und steht auf
+   derselben Zeile wie das Datum gegenueber: unten links der Name des
+   Abends, unten rechts sein Datum. Eine Stufe kleiner als die uebrigen
+   Meta-Zeilen – er benennt die Produktion, ohne dem Claim darueber und
+   der Wortmarke darunter die Aufmerksamkeit zu nehmen. */
+.m-production {
+  --i: 2;
+  top: calc(101 * var(--k));
+  left: calc(8 * var(--k));
+  font-size: 0.78em;
+  letter-spacing: 0.03em;
 }
 
 /* Wortmarke und Ticket-Aufruf teilen sich eine Zeile: beide sitzen
@@ -657,7 +681,16 @@ a {
   column-gap: var(--sp-m);
 }
 
-/* --- Infos / Trailer -------------------------------------------- */
+/* Bleibt von einem zweispaltigen Block nur eine Spalte uebrig – der
+   Programmtext ohne Trailer daneben –, dann soll die Sektion auch
+   einspaltig sein. Sonst stuende der Text in der linken Haelfte und
+   rechts eine gleich grosse Leere, die wie ein Fehler aussieht. Die
+   Zeilenlaenge huetet .infos__text selbst ueber --measure. */
+.cols:has(> .col:only-child) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* --- Programm / Trailer ------------------------------------------ */
 .infos__text {
   max-width: var(--measure);
   margin: 0;
@@ -786,10 +819,16 @@ a.trailer__frame:focus-visible::after {
 
 /* Drei Felder: wann – was – Tickets. Die mittlere Spalte ist so breit
    wie ihr Text, damit die Schaltflaeche direkt neben der Produktion
-   steht und nicht am fernen Seitenrand. */
+   steht und nicht am fernen Seitenrand.
+
+   Das Datum hat als Untergrenze seinen eigenen Inhalt: ein langer
+   Produktionsname – «Nutcracker Rewired – Weihnachtliche Familien
+   Matinée» ist einer – darf die mittlere Spalte breit machen, aber
+   nicht die erste zusammendruecken. Er bricht dann um, das Datum
+   bleibt stehen. */
 .cal__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 2fr);
+  grid-template-columns: minmax(min-content, 1fr) auto minmax(0, 2fr);
   column-gap: var(--sp-m);
   align-items: start;
   padding: var(--sp-s) 0;
@@ -813,6 +852,14 @@ a.trailer__frame:focus-visible::after {
 .cal__clock,
 .cal__production {
   font-weight: 700;
+}
+
+/* Produktionsnamen koennen lang werden und stehen in einer Spalte,
+   die sich nach ihnen richtet – ein guter Umbruch ist hier kein
+   Luxus, sondern der Unterschied zwischen zwei Zeilen und einer
+   einzelnen Waise. */
+.cal__production {
+  text-wrap: pretty;
 }
 
 .cal__venue {
@@ -1063,6 +1110,16 @@ a.trailer__frame:focus-visible::after {
 
   .m-claim-2 {
     margin-bottom: 7px;
+  }
+
+  /* Der Produktionstitel steht auch hier auf eigener Zeile: zwischen
+     dem Claim und den Angaben zum Abend, zu denen er gehoert. In der
+     Grösse der uebrigen Zeilen – die Verkleinerung oben war eine
+     Antwort auf die Plakatkomposition, und die gibt es hier nicht. */
+  .m-production {
+    flex: 0 0 100%;
+    white-space: normal;
+    font-size: 1em;
   }
 
   /* erzwingt den Umbruch vor dem Datum, unabhängig von der Textlänge */

@@ -12,6 +12,25 @@ export function formatDate(iso: string | null | undefined): string {
   }).format(new Date(iso))
 }
 
+/**
+ * «Samstag, 19. Dezember 2026» – fuer die erste Zeile der Spalte
+ * «Informationen».
+ *
+ * Mit Wochentag und mit Komma, anders als im Kalender: dort steht der
+ * Wochentag als eigene Zeile ueber der Uhrzeit, hier laeuft die Angabe
+ * als ein Satz weiter, an den die Uhrzeit noch anschliesst.
+ */
+export function formatLongDate(iso: string | null | undefined): string {
+  if (!iso) return ''
+  return new Intl.DateTimeFormat('de-CH', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: TIME_ZONE,
+  }).format(new Date(iso))
+}
+
 /** «20:00 Uhr» */
 export function formatTime(iso: string | null | undefined): string {
   if (!iso) return ''

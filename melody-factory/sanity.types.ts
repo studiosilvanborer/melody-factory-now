@@ -110,6 +110,7 @@ export type EventPage = {
   claimLine1: string;
   claimLine2: string;
   claimLanguage?: "en" | "de";
+  productionTitle?: string;
   calendarLabel?: string;
   wordmark: string;
   startsAt: string;
@@ -123,6 +124,7 @@ export type EventPage = {
   introTitle: string;
   introLead: RichText;
   factsTitle: string;
+  labelDate: string;
   labelDuration: string;
   labelVenue: string;
   labelAdditionalInfo: string;
@@ -140,6 +142,7 @@ export type EventPage = {
   infosTitle: string;
   infosText: RichText;
   infosOutro?: string;
+  showTrailer?: boolean;
   trailerTitle: string;
   trailerVideo?: {
     asset?: SanityFileAssetReference;
@@ -319,7 +322,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/sanity/queries.ts
 // Variable: EVENT_PAGE_QUERY
-// Query: *[_type == "eventPage" && _id == "eventPage"][0]{    heroImage{..., alt, asset->{_id, url, metadata{lqip, dimensions}}},    logoText,    claimLine1,    claimLine2,    claimLanguage,    calendarLabel,    wordmark,    startsAt,    venueShort,    city,    venueFull,    duration,    additionalInfo,    ticketUrl,    ticketLabel,    introTitle,    introLead,    factsTitle,    labelDuration,    labelVenue,    labelAdditionalInfo,    additionalFacts[]{label, value},    castTitle,    cast[]{role, name},    infosTitle,    infosText,    infosOutro,    trailerTitle,    trailerVideo{asset->{_id, url, mimeType}},    trailerUrl,    trailerPlaceholder,    footerLinkColumns[]{links[]{label, href}},    ctaTitle,    newsletterLabel,    footerWordmark,    footerLegal,    newsletterTitle,    newsletterLead,    metaTitle,    metaDescription,    shareTitle,    shareDescription,    shareImage{asset->{_id, url}}  }
+// Query: *[_type == "eventPage" && _id == "eventPage"][0]{    heroImage{..., alt, asset->{_id, url, metadata{lqip, dimensions}}},    logoText,    claimLine1,    claimLine2,    claimLanguage,    productionTitle,    calendarLabel,    wordmark,    startsAt,    venueShort,    city,    venueFull,    duration,    additionalInfo,    ticketUrl,    ticketLabel,    introTitle,    introLead,    factsTitle,    labelDate,    labelDuration,    labelVenue,    labelAdditionalInfo,    additionalFacts[]{label, value},    castTitle,    cast[]{role, name},    infosTitle,    infosText,    infosOutro,    showTrailer,    trailerTitle,    trailerVideo{asset->{_id, url, mimeType}},    trailerUrl,    trailerPlaceholder,    footerLinkColumns[]{links[]{label, href}},    ctaTitle,    newsletterLabel,    footerWordmark,    footerLegal,    newsletterTitle,    newsletterLead,    metaTitle,    metaDescription,    shareTitle,    shareDescription,    shareImage{asset->{_id, url}}  }
 export type EVENT_PAGE_QUERY_RESULT = {
   heroImage: {
     asset: {
@@ -340,6 +343,7 @@ export type EVENT_PAGE_QUERY_RESULT = {
   claimLine1: string;
   claimLine2: string;
   claimLanguage: "de" | "en" | null;
+  productionTitle: string | null;
   calendarLabel: string | null;
   wordmark: string;
   startsAt: string;
@@ -353,6 +357,7 @@ export type EVENT_PAGE_QUERY_RESULT = {
   introTitle: string;
   introLead: RichText;
   factsTitle: string;
+  labelDate: string;
   labelDuration: string;
   labelVenue: string;
   labelAdditionalInfo: string;
@@ -368,6 +373,7 @@ export type EVENT_PAGE_QUERY_RESULT = {
   infosTitle: string;
   infosText: RichText;
   infosOutro: string | null;
+  showTrailer: boolean | null;
   trailerTitle: string;
   trailerVideo: {
     asset: {
@@ -422,7 +428,7 @@ export type CALENDAR_PAGE_QUERY_RESULT = {
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "eventPage" && _id == "eventPage"][0]{\n    heroImage{..., alt, asset->{_id, url, metadata{lqip, dimensions}}},\n    logoText,\n    claimLine1,\n    claimLine2,\n    claimLanguage,\n    calendarLabel,\n    wordmark,\n\n    startsAt,\n    venueShort,\n    city,\n    venueFull,\n    duration,\n    additionalInfo,\n    ticketUrl,\n    ticketLabel,\n\n    introTitle,\n    introLead,\n\n    factsTitle,\n    labelDuration,\n    labelVenue,\n    labelAdditionalInfo,\n    additionalFacts[]{label, value},\n\n    castTitle,\n    cast[]{role, name},\n\n    infosTitle,\n    infosText,\n    infosOutro,\n\n    trailerTitle,\n    trailerVideo{asset->{_id, url, mimeType}},\n    trailerUrl,\n    trailerPlaceholder,\n\n    footerLinkColumns[]{links[]{label, href}},\n    ctaTitle,\n    newsletterLabel,\n    footerWordmark,\n    footerLegal,\n\n    newsletterTitle,\n    newsletterLead,\n\n    metaTitle,\n    metaDescription,\n    shareTitle,\n    shareDescription,\n    shareImage{asset->{_id, url}}\n  }\n': EVENT_PAGE_QUERY_RESULT;
+    '\n  *[_type == "eventPage" && _id == "eventPage"][0]{\n    heroImage{..., alt, asset->{_id, url, metadata{lqip, dimensions}}},\n    logoText,\n    claimLine1,\n    claimLine2,\n    claimLanguage,\n    productionTitle,\n    calendarLabel,\n    wordmark,\n\n    startsAt,\n    venueShort,\n    city,\n    venueFull,\n    duration,\n    additionalInfo,\n    ticketUrl,\n    ticketLabel,\n\n    introTitle,\n    introLead,\n\n    factsTitle,\n    labelDate,\n    labelDuration,\n    labelVenue,\n    labelAdditionalInfo,\n    additionalFacts[]{label, value},\n\n    castTitle,\n    cast[]{role, name},\n\n    infosTitle,\n    infosText,\n    infosOutro,\n\n    showTrailer,\n    trailerTitle,\n    trailerVideo{asset->{_id, url, mimeType}},\n    trailerUrl,\n    trailerPlaceholder,\n\n    footerLinkColumns[]{links[]{label, href}},\n    ctaTitle,\n    newsletterLabel,\n    footerWordmark,\n    footerLegal,\n\n    newsletterTitle,\n    newsletterLead,\n\n    metaTitle,\n    metaDescription,\n    shareTitle,\n    shareDescription,\n    shareImage{asset->{_id, url}}\n  }\n': EVENT_PAGE_QUERY_RESULT;
     '\n  *[_type == "calendarPage" && _id == "calendarPage"][0]{\n    title,\n    entries[]{startsAt, venue, production, ticketUrl, ticketLabel},\n    emptyText,\n\n    metaTitle,\n    metaDescription\n  }\n': CALENDAR_PAGE_QUERY_RESULT;
   }
 }
