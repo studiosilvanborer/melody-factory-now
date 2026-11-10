@@ -36,7 +36,7 @@ export const calendarEntry = defineType({
       title: 'Produktion',
       type: 'string',
       description:
-        'Die fette Zeile darunter – z. B. «NOW!» oder «Nutcracker Rewired – Weihnachtliche Familien Matinée».',
+        'Die fette Zeile darunter – z. B. «NOW!» oder «Nutcracker Rewired». Lange Namen brechen um, ohne das Datum daneben zu verdrängen.',
       initialValue: 'NOW!',
       validation: (rule) => rule.required().max(80),
     }),
