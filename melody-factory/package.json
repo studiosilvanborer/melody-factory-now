@@ -20,7 +20,7 @@
     "@sanity/locale-de-de": "^1.1.37",
     "@sanity/ui": "^4.4.5",
     "@sanity/vision": "^6.19.0",
-    "next": "16.4.0",
+    "next": "16.4.6",
     "next-sanity": "^13.3.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -32,7 +32,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.4.0",
+    "eslint-config-next": "16.4.6",
     "typescript": "^5"
   }
 }
