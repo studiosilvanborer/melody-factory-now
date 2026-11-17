@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import {PartnerLogo} from '@/components/PartnerLogo'
+import type {Design} from '@/sanity/design'
 import {urlFor} from '@/sanity/image'
 import type {EventPageData} from '@/sanity/types'
 import {formatDate, formatTime} from '@/lib/format'
@@ -10,7 +12,7 @@ import {formatDate, formatTime} from '@/lib/format'
  * m-claim-1 … m-date; sie sind absolut gesetzt, darum ist die Reihenfolge
  * im Markup frei.
  */
-export function Hero({page}: {page: EventPageData}) {
+export function Hero({page, design}: {page: EventPageData; design: Design}) {
   const image = page.heroImage
   const dimensions = image?.asset?.metadata?.dimensions
 
@@ -42,17 +44,9 @@ export function Hero({page}: {page: EventPageData}) {
           {page.logoText}
         </Link>
 
-        {/* Partnerlogo gegenueber der Wortmarke.
-            Kein next/image: die Datei liegt fertig in /public und ist
-            kleiner als der Aufwand, sie unterwegs umzurechnen. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="partner-logo on-load"
-          src="/3fach-logo.png"
-          width={673}
-          height={300}
-          alt="3FACH"
-        />
+        {/* Partnerlogo gegenueber der Wortmarke – Datei, Breite und
+            Bildbeschreibung kommen aus dem Datensatz «Gestaltung». */}
+        <PartnerLogo design={design} className="on-load" />
       </header>
 
       <div className="lower">

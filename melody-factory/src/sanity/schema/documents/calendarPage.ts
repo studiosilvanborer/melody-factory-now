@@ -1,6 +1,7 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 // @sanity/icons liefert die Symbole ab v5 nur noch einzeln ueber Unterpfade.
 import {CalendarIcon} from '@sanity/icons/Calendar'
+import {InsertAboveIcon} from '@sanity/icons/InsertAbove'
 import {SearchIcon} from '@sanity/icons/Search'
 
 /**
@@ -23,6 +24,7 @@ export const calendarPage = defineType({
   type: 'document',
   groups: [
     {name: 'calendar', title: 'Termine', icon: CalendarIcon, default: true},
+    {name: 'header', title: 'Seitenkopf', icon: InsertAboveIcon},
     {name: 'seo', title: 'Suchmaschinen & Social', icon: SearchIcon},
   ],
 
@@ -53,6 +55,51 @@ export const calendarPage = defineType({
       description: 'Steht anstelle der Liste, solange kein Termin erfasst ist.',
       initialValue: 'Neue Termine folgen in Kürze.',
       validation: (rule) => rule.required().max(120),
+    }),
+
+    /* ── Seitenkopf ────────────────────────────────────────────────────
+       Ueber der Liste steht dieselbe Zeile wie auf der Startseite: links
+       die Wortmarke, die zurueckfuehrt, rechts das Partnerlogo. Bisher
+       kam die Wortmarke von der Startseite – wer dem Kalender eine
+       eigene geben will, tut es hier.
+
+       Beide Felder duerfen leer bleiben, und dann gilt genau das, was
+       vorher galt: die Wortmarke der Startseite, und als Ziel die
+       Startseite selbst. Darum kein initialValue – ein vorbelegtes Feld
+       waere hier eine Kopie, die beim naechsten Umbenennen der
+       Startseite stehenbliebe und veraltet. */
+    defineField({
+      name: 'logoText',
+      title: 'Wortmarke oben links',
+      type: 'string',
+      group: 'header',
+      description:
+        'Leer lassen, und es steht die Wortmarke der Startseite da – so bleibt sie an einer Stelle gepflegt.',
+      validation: (rule) => rule.max(40),
+    }),
+    defineField({
+      name: 'logoHref',
+      title: 'Ziel der Wortmarke',
+      type: 'string',
+      group: 'header',
+      description:
+        'Wohin der Klick auf die Wortmarke führt. Leer lassen für die Startseite. «/» für die Startseite, «https://…» für eine fremde Seite.',
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (value === undefined || value === null || value === '') return true
+          if (typeof value !== 'string') return 'Bitte eine Adresse eintragen.'
+          if (/^(https?:\/\/|mailto:|tel:|\/|#)/.test(value.trim())) return true
+          return 'Bitte mit https://, mailto:, tel:, / oder # beginnen.'
+        }),
+    }),
+    defineField({
+      name: 'showPartnerLogo',
+      title: 'Partnerlogo hier zeigen',
+      type: 'boolean',
+      group: 'header',
+      description:
+        'Nur fuer diese Seite. Aus: die rechte Ecke des Kalenders bleibt leer, auf den uebrigen Seiten steht das Logo weiter. Welche Datei es ist, steht unter «Gestaltung».',
+      initialValue: true,
     }),
 
     /* ── Suchmaschinen & Social ────────────────────────────────────── */

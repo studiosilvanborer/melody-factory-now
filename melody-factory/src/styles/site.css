@@ -9,6 +9,12 @@
         <designpx> / 1440 * 100 = vw-Wert. Jede Stufe ist
         clamp(Minimum, fluide, Maximum @1440).
    =============================================================== */
+/* Die Werte unter «Farbe», «Schrift», «Bild» und «Logo» stehen auch im
+   Studio, im Datensatz «Gestaltung». Was dort gesetzt ist, ueberschreibt
+   sie beim Abrufen der Seite (src/sanity/design.ts, Selektor :root:root).
+   Hier stehen sie als Entwurfswerte: sie gelten, solange im Studio nichts
+   anderes steht – und sie bleiben die eine Stelle, an der ein neuer
+   gestaltbarer Wert zuerst angelegt wird. */
 :root {
   /* ── Farbe ──────────────────────────────────────────────── */
   --pink: #e4017e; /* Melody-Factory-Magenta, aus dem Flyer gemessen */
@@ -19,6 +25,15 @@
   --sans: "myriad-pro", "Myriad Pro", "Helvetica Neue", Arial, sans-serif;
   --serif: "EB Garamond", "Adobe Garamond Pro", Garamond, "Times New Roman",
     serif;
+
+  /* ── Bild ───────────────────────────────────────────────── */
+  --hero-focus: 50% 28%; /* Ausschnitt des Hero-Bildes */
+  --hero-focus-mobile: 48% 20%; /* … auf schmalen Bildschirmen */
+  --scrim: 1; /* Stärke der Abdunklung darüber, 0 = keine */
+
+  /* ── Logo ───────────────────────────────────────────────── */
+  --partner-logo-w: 98; /* Breite in Entwurfs-Pixeln, mal --k */
+  --partner-logo-w-mobile: 140;
 
   /* ── Hero-Raster ────────────────────────────────────────── */
   --k: clamp(0.7px, min(0.0694vw, 0.0977svh), 1.35px);
@@ -343,7 +358,7 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 28%;
+  object-position: var(--hero-focus);
   z-index: 0;
 }
 
@@ -369,7 +384,10 @@ a {
   }
 }
 
-/* subtiler Verlauf – nur dort, wo das Layout das Foto bedrängt */
+/* subtiler Verlauf – nur dort, wo das Layout das Foto bedrängt.
+   Die vier Stufen stehen zueinander fest; --scrim skaliert sie
+   gemeinsam, damit ein helles Foto mehr und ein dunkles weniger
+   Abdunklung bekommen kann, ohne dass der Verlauf seine Form verliert. */
 .hero__scrim {
   position: absolute;
   inset: auto 0 0 0;
@@ -379,9 +397,9 @@ a {
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.3) 35%,
-    rgba(0, 0, 0, 0.5) 65%,
-    rgba(0, 0, 0, 0.65) 100%
+    rgba(0, 0, 0, calc(0.3 * var(--scrim))) 35%,
+    rgba(0, 0, 0, calc(0.5 * var(--scrim))) 65%,
+    rgba(0, 0, 0, calc(0.65 * var(--scrim))) 100%
   );
 }
 
@@ -427,13 +445,14 @@ a {
 
 /* Das Partnerlogo sitzt in der rechten oberen Ecke, auf gleicher Hoehe
    wie die Wortmarke. Es ist breit statt hoch (673 x 300), die Breite
-   waechst mit --k wie alles andere mit.
+   waechst mit --k wie alles andere mit und steht als Zahl im Studio.
    Das Magenta steckt in der Datei: /public/3fach-logo.png ist auf
-   --pink (#e4017e) umgefaerbt. Aendert sich der Farbwert, muss die
-   Datei neu eingefaerbt werden. */
+   --pink (#e4017e) umgefaerbt. Aendert sich der Farbwert – oder wird im
+   Studio eine andere Datei hinterlegt –, muss sie in der neuen Farbe
+   vorliegen. */
 .partner-logo {
   --i: -1;
-  width: calc(98 * var(--k));
+  width: calc(var(--partner-logo-w) * var(--k));
   height: auto;
   flex: none;
   display: block;
@@ -1062,7 +1081,7 @@ a.trailer__frame:focus-visible::after {
    =============================================================== */
 @media (max-width: 900px) {
   .hero__bg {
-    object-position: 48% 20%;
+    object-position: var(--hero-focus-mobile);
   }
 
   .header {
@@ -1188,7 +1207,7 @@ a.trailer__frame:focus-visible::after {
      Bildschirm nicht mitschrumpfen, sondern nur klein bleiben. Hier
      deshalb die groessere Breite von vor der Desktop-Verkleinerung. */
   .partner-logo {
-    width: calc(140 * var(--k));
+    width: calc(var(--partner-logo-w-mobile) * var(--k));
   }
 
   .nav {

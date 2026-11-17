@@ -3,34 +3,43 @@ import {draftMode} from 'next/headers'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import type {ReactNode} from 'react'
 
+import {DesignTokens, FontLinks} from '@/components/DesignTokens'
 import {HeroParallaxFallback} from '@/components/HeroParallaxFallback'
 import {MailerLite} from '@/components/MailerLite'
 import {RevealOnScroll} from '@/components/RevealOnScroll'
+import {resolveDesign} from '@/sanity/design'
 import {siteUrl} from '@/sanity/env'
-import {fetchEventPage, resolveFetchMode, SanityLive} from '@/sanity/live'
+import {
+  fetchEventPage,
+  fetchSiteSettings,
+  resolveFetchMode,
+  SanityLive,
+} from '@/sanity/live'
 import {urlFor} from '@/sanity/image'
-import type {EventPageData} from '@/sanity/types'
+import type {EventPageData, SiteSettingsData} from '@/sanity/types'
 
 import '@/styles/site.css'
-
-/** Magentafarbenes Feld mit dem N der Wortmarke. */
-const FAVICON =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23e4017e'/%3E%3Ctext x='16' y='24' font-family='Garamond,Georgia,serif' font-size='26' text-anchor='middle' fill='%23000'%3EN%3C/text%3E%3C/svg%3E"
-
-export const viewport: Viewport = {
-  themeColor: '#e4017e',
-}
 
 /**
  * Titel, Beschreibung und Social-Vorschau kommen aus dem Studio – der
  * Kunde pflegt sie im Reiter «Suchmaschinen & Social», ohne dass jemand
- * Code anfassen muss.
+ * Code anfassen muss. Das Zeichen im Browser-Reiter kommt aus dem
+ * Datensatz «Gestaltung» und folgt damit der Akzentfarbe.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const page = (await fetchEventPage(await resolveFetchMode())) as EventPageData | null
+  const mode = await resolveFetchMode()
+  const [page, settings] = await Promise.all([
+    fetchEventPage(mode) as Promise<EventPageData | null>,
+    fetchSiteSettings(mode) as Promise<SiteSettingsData>,
+  ])
+  const design = resolveDesign(settings)
 
   if (!page) {
-    return {title: 'Melody Factory', description: 'Inhalte werden noch gepflegt.'}
+    return {
+      title: 'Melody Factory',
+      description: 'Inhalte werden noch gepflegt.',
+      icons: {icon: design.faviconUrl},
+    }
   }
 
   const shareImage = page.shareImage?.asset
@@ -43,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(siteUrl),
     title: page.metaTitle,
     description: page.metaDescription,
-    icons: {icon: FAVICON},
+    icons: {icon: design.faviconUrl},
     openGraph: {
       type: 'website',
       locale: 'de_CH',
@@ -60,36 +69,41 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+/**
+ * Die Farbe, mit der mobile Browser ihre Leiste ueber der Seite
+ * einfaerben – dieselbe Akzentfarbe wie die Seite selbst. Als Funktion
+ * und nicht als Konstante, weil sie jetzt aus dem Studio kommt.
+ */
+export async function generateViewport(): Promise<Viewport> {
+  const settings = (await fetchSiteSettings(await resolveFetchMode())) as SiteSettingsData
+  return {themeColor: resolveDesign(settings).accent}
+}
+
 export default async function SiteLayout({children}: {children: ReactNode}) {
   const {isEnabled: isDraftMode} = await draftMode()
+  const settings = (await fetchSiteSettings(await resolveFetchMode())) as SiteSettingsData
+  const design = resolveDesign(settings)
 
   return (
     <>
-      {/* Myriad Pro (Typekit) und EB Garamond kommen als Stylesheet-Link,
-          genau wie im Entwurf; React hebt die Tags in den <head>.
-          next/font ist hier keine Option: das CSS der Seite spricht die
-          Familien unter ihren echten Namen an («myriad-pro», «EB
-          Garamond»), next/font vergibt aber generierte. Die Lint-Regel
-          dagegen zielt auf den Pages Router und greift hier nicht. */}
-      {/* eslint-disable @next/next/no-page-custom-font */}
-      <link rel="stylesheet" href="https://use.typekit.net/wgo3fee.css" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap"
-      />
-      {/* eslint-enable @next/next/no-page-custom-font */}
+      <FontLinks design={design} />
+      <DesignTokens design={design} />
 
       <a className="skip-link" href="#programm">
-        Zum Inhalt springen
+        {design.skipLinkLabel}
       </a>
 
       {children}
 
-      <RevealOnScroll />
-      <HeroParallaxFallback />
-      <MailerLite />
+      {/* Beide Skripte haengen an der Bewegung: eines blendet die
+          Elemente ein, das andere laesst das Hero-Bild nachlaufen. Steht
+          der Schalter im Studio auf aus, braucht es sie nicht – und ohne
+          RevealOnScroll bekommt die Seite nie die Klasse .js-anim, mit
+          der der Startzustand «unsichtbar» ueberhaupt erst gilt. */}
+      {design.animations ? <RevealOnScroll /> : null}
+      {design.animations && design.parallax ? <HeroParallaxFallback /> : null}
+
+      <MailerLite accountId={design.mailerliteAccountId} />
 
       <SanityLive includeDrafts={isDraftMode} />
       {isDraftMode ? <VisualEditing /> : null}

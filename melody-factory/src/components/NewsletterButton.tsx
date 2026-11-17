@@ -2,8 +2,6 @@
 
 import {useSyncExternalStore} from 'react'
 
-import {MAILERLITE_FORM_ID} from '@/lib/mailerlite'
-
 /* Nichts zu abonnieren: der Wert wechselt genau einmal, von der
    Server-Antwort zur Hydration. Die Funktionen stehen hier draussen,
    damit sie stabil bleiben – React vergleicht sie bei jedem Render. */
@@ -34,7 +32,7 @@ const onServer = () => false
  * aber eine zweite Renderrunde aus – die Lint-Regel
  * react-hooks/set-state-in-effect zeigt genau darauf.
  */
-export function NewsletterButton({label}: {label: string}) {
+export function NewsletterButton({label, formId}: {label: string; formId: string}) {
   const ready = useSyncExternalStore(noSubscribe, onClient, onServer)
 
   if (!ready) return null
@@ -43,7 +41,7 @@ export function NewsletterButton({label}: {label: string}) {
     <button
       type="button"
       className="btn"
-      onClick={() => window.ml?.('show', MAILERLITE_FORM_ID, true)}
+      onClick={() => window.ml?.('show', formId, true)}
     >
       {label}
     </button>

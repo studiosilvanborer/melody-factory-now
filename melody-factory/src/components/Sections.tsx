@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import {RichText} from '@/components/RichText'
+import type {Design} from '@/sanity/design'
 import {
   embedUrl,
   formatDate,
@@ -153,7 +154,7 @@ export function InfosAndTrailerSection({page}: {page: EventPageData}) {
   )
 }
 
-export function SiteFooter({page}: {page: EventPageData}) {
+export function SiteFooter({page, design}: {page: EventPageData; design: Design}) {
   const columns = (page.footerLinkColumns ?? []).filter(
     (column) => (column.links ?? []).length > 0,
   )
@@ -161,7 +162,10 @@ export function SiteFooter({page}: {page: EventPageData}) {
   return (
     <footer className="footer">
       <div className="footer__top reveal">
-        <nav className="footer__links" aria-label="Footer">
+        {/* Die Bezeichnung hoert nur, wer sich die Seite vorlesen laesst
+            – gepflegt wird sie trotzdem im Studio, Datensatz
+            «Gestaltung», Reiter «Texte der Oberflaeche». */}
+        <nav className="footer__links" aria-label={design.footerNavLabel}>
           {columns.map((column, columnIndex) => (
             <ul className="linkgroup" key={columnIndex}>
               {(column.links ?? []).map((link, index) => (

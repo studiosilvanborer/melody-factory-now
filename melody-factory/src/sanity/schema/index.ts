@@ -2,6 +2,7 @@ import type {SchemaTypeDefinition} from 'sanity'
 
 import {calendarPage} from './documents/calendarPage'
 import {eventPage} from './documents/eventPage'
+import {siteSettings} from './documents/siteSettings'
 import {calendarEntry} from './objects/calendarEntry'
 import {castMember} from './objects/castMember'
 import {fact} from './objects/fact'
@@ -12,6 +13,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   // Dokumente
   eventPage,
   calendarPage,
+  siteSettings,
   // Bausteine
   richText,
   link,

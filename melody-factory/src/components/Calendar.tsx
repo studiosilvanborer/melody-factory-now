@@ -1,6 +1,7 @@
 import type {CSSProperties} from 'react'
 
 import {formatClock, formatWeekdayDate, machineDateTime} from '@/lib/format'
+import {fillTicketContext, type Design} from '@/sanity/design'
 import type {CalendarEntry, CalendarPageData} from '@/sanity/types'
 
 /**
@@ -15,7 +16,13 @@ import type {CalendarEntry, CalendarPageData} from '@/sanity/types'
  * nennen so die Anzahl der Termine, statt Spaltenkoepfe anzusagen, die
  * es gar nicht gibt.
  */
-export function CalendarSection({page}: {page: CalendarPageData}) {
+export function CalendarSection({
+  page,
+  design,
+}: {
+  page: CalendarPageData
+  design: Design
+}) {
   const entries = page.entries ?? []
 
   return (
@@ -29,6 +36,7 @@ export function CalendarSection({page}: {page: CalendarPageData}) {
               key={`${entry.startsAt}-${index}`}
               entry={entry}
               index={index}
+              design={design}
             />
           ))}
         </ol>
@@ -39,7 +47,15 @@ export function CalendarSection({page}: {page: CalendarPageData}) {
   )
 }
 
-function CalendarRow({entry, index}: {entry: CalendarEntry; index: number}) {
+function CalendarRow({
+  entry,
+  index,
+  design,
+}: {
+  entry: CalendarEntry
+  index: number
+  design: Design
+}) {
   const date = formatWeekdayDate(entry.startsAt)
 
   return (
@@ -56,7 +72,7 @@ function CalendarRow({entry, index}: {entry: CalendarEntry; index: number}) {
         <span className="cal__production">{entry.production}</span>
       </p>
 
-      <Tickets entry={entry} date={date} />
+      <Tickets entry={entry} date={date} design={design} />
     </li>
   )
 }
@@ -74,10 +90,26 @@ function CalendarRow({entry, index}: {entry: CalendarEntry; index: number}) {
  * man anspringen kann, ist eine Sackgasse. `aria-disabled` sagt es
  * denen, die es wissen muessen.
  */
-function Tickets({entry, date}: {entry: CalendarEntry; date: string}) {
+function Tickets({
+  entry,
+  date,
+  design,
+}: {
+  entry: CalendarEntry
+  date: string
+  design: Design
+}) {
   // Sechsmal «Tickets» untereinander sagt vorgelesen nichts aus – welcher
-  // Termin gemeint ist, steht nur in der Zeile daneben.
-  const context = <span className="visually-hidden">{` für ${entry.production} am ${date}`}</span>
+  // Termin gemeint ist, steht nur in der Zeile daneben. Die Formulierung
+  // steht im Studio, mit {produktion} und {datum} als Platzhaltern.
+  const context = (
+    <span className="visually-hidden">
+      {` ${fillTicketContext(design.calendarTicketContext, {
+        production: entry.production,
+        date,
+      })}`}
+    </span>
+  )
 
   if (!entry.ticketUrl) {
     return (

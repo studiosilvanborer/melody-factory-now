@@ -1,15 +1,19 @@
 /**
- * Fuellt das Studio mit Startinhalten: der Seite (bisher index.html)
- * und dem Kalender.
+ * Fuellt das Studio mit Startinhalten: der Seite (bisher index.html),
+ * dem Kalender und der Gestaltung (bisher site.css und /public).
  *
- *   npm run seed              – legt an, was noch fehlt
+ *   npm run seed              – legt an, was fehlt; ergaenzt bei
+ *                               vorhandenen Datensaetzen die leeren Felder
  *   npm run seed -- --force   – ueberschreibt auch Vorhandenes
  *   npm run seed -- --dry-run – zeigt nur, was geschrieben wuerde
  *
  * Braucht SANITY_API_WRITE_TOKEN in .env.local (Rolle «Editor»).
- * Ohne --force wird nie etwas ueberschrieben: sobald der Kunde seine
- * Texte gepflegt hat, darf ein versehentliches `npm run seed` sie nicht
- * wieder auf den Entwurfsstand zuruecksetzen.
+ *
+ * Ohne --force wird nie etwas ueberschrieben. Steht ein Datensatz schon
+ * da, werden nur die Felder gesetzt, die in ihm noch fehlen
+ * (setIfMissing) – so landen neue Felder im Studio, ohne dass ein
+ * versehentliches `npm run seed` die gepflegten Texte auf den
+ * Entwurfsstand zuruecksetzt.
  */
 import {randomUUID} from 'node:crypto'
 import {createReadStream, existsSync, readFileSync} from 'node:fs'
@@ -49,6 +53,7 @@ const client = createClient({
 
 const DOC_ID = 'eventPage'
 const CALENDAR_ID = 'calendarPage'
+const SETTINGS_ID = 'siteSettings'
 
 /* ── Hilfsmittel fuer Portable Text ───────────────────────────────── */
 
@@ -242,12 +247,66 @@ const calendar = {
     'Alle Termine der Melody Factory – Daten, Orte und Tickets auf einen Blick.',
 }
 
+/* ── Die Gestaltung ───────────────────────────────────────────────── */
+
+/**
+ * Was bisher nur im Code stand: die Farben aus site.css, die Schriften
+ * aus dem Layout, der Bildausschnitt des Heros, die Breite des
+ * Partnerlogos, die Saetze fuer Tastatur und Vorleseprogramme, die
+ * beiden Kennungen von MailerLite.
+ *
+ * Dieselben Werte stehen als Rueckfall in src/sanity/design.ts – die
+ * Seite laeuft also auch ohne diesen Datensatz. Hier landen sie, damit
+ * sie im Studio sichtbar und aenderbar sind und nicht nur im Code.
+ */
+const settings = {
+  _id: SETTINGS_ID,
+  _type: 'siteSettings',
+
+  accentColor: '#e4017e',
+  inkColor: '#000000',
+  hoverColor: '#ffffff',
+  faviconLetter: 'N',
+
+  showPartnerLogo: true,
+  partnerLogoWidth: 98,
+  partnerLogoWidthMobile: 140,
+
+  fontSerif: '"EB Garamond", "Adobe Garamond Pro", Garamond, "Times New Roman", serif',
+  fontSans: '"myriad-pro", "Myriad Pro", "Helvetica Neue", Arial, sans-serif',
+  fontStylesheets: [
+    'https://use.typekit.net/wgo3fee.css',
+    'https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap',
+  ],
+
+  heroFocusX: 50,
+  heroFocusY: 28,
+  heroFocusXMobile: 48,
+  heroFocusYMobile: 20,
+  heroScrim: 100,
+
+  enableAnimations: true,
+  enableParallax: true,
+
+  skipLinkLabel: 'Zum Inhalt springen',
+  footerNavLabel: 'Footer',
+  newsletterNoscript: 'Für die Anmeldung muss JavaScript eingeschaltet sein.',
+  calendarTicketContext: 'für {produktion} am {datum}',
+
+  mailerliteAccountId: '2708824',
+  mailerliteFormId: 'xbRCOL',
+}
+
 /* ── Los ──────────────────────────────────────────────────────────── */
 
 if (dryRun) {
   const image = await findHeroImage()
   console.log(JSON.stringify({...content, heroImage: image ? `<Upload: ${image}>` : null}, null, 2))
   console.log(JSON.stringify(calendar, null, 2))
+  const logo = findPartnerLogo()
+  console.log(
+    JSON.stringify({...settings, partnerLogo: logo ? `<Upload: ${logo}>` : null}, null, 2),
+  )
   console.log(
     `\n${countBlocks(content.introLead)} Absatz/Absaetze im Lead, ` +
       `${countBlocks(content.infosText)} im Infos-Text, ` +
@@ -261,42 +320,105 @@ if (dryRun) {
 
 // Jeder Datensatz wird fuer sich geprueft: wer den Kalender nachtraegt,
 // soll ihn anlegen koennen, ohne die gepflegte Startseite zu gefaehrden.
-const [hasPage, hasCalendar] = await Promise.all([
+const [hasPage, hasCalendar, hasSettings] = await Promise.all([
   client.getDocument(DOC_ID).catch(() => null),
   client.getDocument(CALENDAR_ID).catch(() => null),
+  client.getDocument(SETTINGS_ID).catch(() => null),
 ])
 
-if (hasPage && hasCalendar && !force) {
-  console.log(
-    `Die Datensaetze «${DOC_ID}» und «${CALENDAR_ID}» sind schon da – es wurde nichts angefasst.\n` +
-      'Mit `npm run seed -- --force` ueberschreiben.',
-  )
-  process.exit(0)
-}
-
-let heroImage = null
-
 if (!hasPage || force) {
-  heroImage = await uploadHeroImage()
+  const heroImage = await uploadHeroImage()
   if (heroImage) content.heroImage = heroImage
   await client.createOrReplace(content)
   console.log(
     `Der Datensatz «${DOC_ID}» steht${heroImage ? ' – mit Hero-Bild' : ' (ohne Hero-Bild)'}.`,
   )
 } else {
-  console.log(`«${DOC_ID}» war schon da und blieb unberuehrt.`)
+  await fill(DOC_ID, content, hasPage)
 }
 
 if (!hasCalendar || force) {
   await client.createOrReplace(calendar)
   console.log(`Der Kalender «${CALENDAR_ID}» steht – mit ${calendar.entries.length} Terminen.`)
 } else {
-  console.log(`«${CALENDAR_ID}» war schon da und blieb unberuehrt.`)
+  await fill(CALENDAR_ID, calendar, hasCalendar)
+}
+
+// Das Partnerlogo wird nur hochgeladen, wenn der Datensatz neu entsteht
+// oder das Feld noch leer ist: zweimal dieselbe Datei im Archiv hilft
+// niemandem.
+if (!hasSettings || force || !hasSettings.partnerLogo) {
+  const partnerLogo = await uploadPartnerLogo()
+  if (partnerLogo) settings.partnerLogo = partnerLogo
+}
+
+if (!hasSettings || force) {
+  await client.createOrReplace(settings)
+  console.log(
+    `Die Gestaltung «${SETTINGS_ID}» steht${settings.partnerLogo ? ' – mit Partnerlogo' : ''}.`,
+  )
+} else {
+  await fill(SETTINGS_ID, settings, hasSettings)
 }
 
 console.log('Zu sehen unter http://localhost:3000/studio')
 
 /* ── Kleinteile ───────────────────────────────────────────────────── */
+
+/**
+ * Ergaenzt einen vorhandenen Datensatz um die Felder, die in ihm noch
+ * fehlen – und ruehrt keines an, das schon einen Wert hat.
+ *
+ * Das ist der Normalfall nach dem ersten Lauf: das Schema bekommt ein
+ * neues Feld, und der Entwurfswert soll im Studio ankommen, ohne dass die
+ * gepflegten Texte daneben Schaden nehmen. setIfMissing kann das von
+ * sich aus; geprueft wird es hier trotzdem noch einmal, damit in der
+ * Ausgabe steht, was tatsaechlich dazukam.
+ */
+async function fill(id, draft, existing) {
+  const missing = {}
+  for (const [name, value] of Object.entries(draft)) {
+    if (name.startsWith('_')) continue
+    const current = existing[name]
+    if (current === undefined || current === null) missing[name] = value
+  }
+
+  const names = Object.keys(missing)
+
+  if (names.length === 0) {
+    console.log(`«${id}» war vollstaendig – nichts ergaenzt.`)
+    return
+  }
+
+  await client.patch(id).setIfMissing(missing).commit()
+  console.log(`«${id}» ergaenzt um ${names.length} Feld(er): ${names.join(', ')}`)
+}
+
+/** Das Partnerlogo liegt als Datei in /public und wird von dort uebernommen. */
+function findPartnerLogo() {
+  const path = resolve(root, 'public', '3fach-logo.png')
+  return existsSync(path) ? path : null
+}
+
+async function uploadPartnerLogo() {
+  const file = findPartnerLogo()
+
+  if (!file) {
+    console.warn('public/3fach-logo.png nicht gefunden – das Logo-Feld bleibt leer.')
+    return null
+  }
+
+  console.log(`Lade Partnerlogo hoch: ${file}`)
+  const asset = await client.assets.upload('image', createReadStream(file), {
+    filename: '3fach-logo.png',
+  })
+
+  return {
+    _type: 'image',
+    asset: {_type: 'reference', _ref: asset._id},
+    alt: '3FACH',
+  }
+}
 
 /** Das Bild liegt beim statischen Entwurf, eine Ebene ueber diesem Projekt. */
 function findHeroImage() {

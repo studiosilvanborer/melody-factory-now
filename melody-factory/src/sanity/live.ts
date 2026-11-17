@@ -8,7 +8,7 @@ import {
 } from 'next-sanity/live'
 
 import {client} from './client'
-import {CALENDAR_PAGE_QUERY, EVENT_PAGE_QUERY} from './queries'
+import {CALENDAR_PAGE_QUERY, EVENT_PAGE_QUERY, SITE_SETTINGS_QUERY} from './queries'
 
 /**
  * Live Content API.
@@ -88,6 +88,18 @@ export async function fetchCalendarPage(mode: FetchMode) {
   'use cache'
   cacheLife(LIFETIME)
   const {data} = await sanityFetch({query: CALENDAR_PAGE_QUERY, ...mode})
+  return data
+}
+
+/**
+ * Die Gestaltung. Gleiche Regeln wie oben – und derselbe Datensatz fuer
+ * alle drei Seiten: die Abfrage ist dieselbe, also faellt sie innerhalb
+ * der Lebensdauer ohnehin zu einer zusammen.
+ */
+export async function fetchSiteSettings(mode: FetchMode) {
+  'use cache'
+  cacheLife(LIFETIME)
+  const {data} = await sanityFetch({query: SITE_SETTINGS_QUERY, ...mode})
   return data
 }
 

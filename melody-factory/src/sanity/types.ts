@@ -2,6 +2,7 @@ import type {
   CALENDAR_PAGE_QUERY_RESULT,
   EVENT_PAGE_QUERY_RESULT,
   RichText,
+  SITE_SETTINGS_QUERY_RESULT,
 } from '../../sanity.types'
 
 /**
@@ -18,6 +19,12 @@ export type EventPageData = NonNullable<EVENT_PAGE_QUERY_RESULT>
 
 /** Die Inhalte des Kalenders, ohne den null-Fall. */
 export type CalendarPageData = NonNullable<CALENDAR_PAGE_QUERY_RESULT>
+
+/**
+ * Die Gestaltung – mit dem null-Fall, anders als oben. Der Datensatz
+ * darf fehlen: dann gelten ueberall die Entwurfswerte aus design.ts.
+ */
+export type SiteSettingsData = SITE_SETTINGS_QUERY_RESULT
 
 /** Fliesstext, wie ihn das Schema liefert. */
 export type RichTextValue = RichText

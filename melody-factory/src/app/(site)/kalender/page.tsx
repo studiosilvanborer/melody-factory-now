@@ -4,16 +4,20 @@ import Link from 'next/link'
 import {Suspense} from 'react'
 
 import {CalendarSection} from '@/components/Calendar'
+import {PartnerLogo} from '@/components/PartnerLogo'
 import {SiteFooter} from '@/components/Sections'
+import {isExternal} from '@/lib/format'
+import {resolveDesign} from '@/sanity/design'
 import {siteUrl} from '@/sanity/env'
 import {urlFor} from '@/sanity/image'
 import {
   fetchCalendarPage,
   fetchEventPage,
+  fetchSiteSettings,
   resolveFetchMode,
   type FetchMode,
 } from '@/sanity/live'
-import type {CalendarPageData, EventPageData} from '@/sanity/types'
+import type {CalendarPageData, EventPageData, SiteSettingsData} from '@/sanity/types'
 
 /**
  * Die Seite wird bei der Anfrage gerechnet, nicht beim Bauen.
@@ -65,36 +69,72 @@ async function DraftPage() {
 }
 
 async function PageContent({mode}: {mode: FetchMode}) {
-  const [calendar, event] = await Promise.all([
+  const [calendar, event, settings] = await Promise.all([
     fetchCalendarPage(mode) as Promise<CalendarPageData | null>,
     fetchEventPage(mode) as Promise<EventPageData | null>,
+    fetchSiteSettings(mode) as Promise<SiteSettingsData>,
   ])
 
   if (!calendar) return <NotSeededYet />
 
+  const design = resolveDesign(settings)
+
   return (
     <main className="page page--sub">
       <header className="subhead">
-        <Link className="logo" href="/" prefetch={false}>
-          {event?.logoText ?? 'MELODY FACTORY'}
-        </Link>
+        {/* Die Wortmarke dieser Seite: was im Reiter «Seitenkopf» des
+            Kalenders steht, sonst die der Startseite. */}
+        <HeaderLogo
+          label={calendar.logoText || event?.logoText || 'MELODY FACTORY'}
+          href={calendar.logoHref || '/'}
+        />
 
         {/* Dieselbe Ecke wie auf der Startseite, dieselbe Datei – hier
-            aber schwarz, weil sie auf der Magentaflaeche steht. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="partner-logo"
-          src="/3fach-logo.png"
-          width={673}
-          height={300}
-          alt="3FACH"
-        />
+            aber schwarz, weil sie auf der Magentaflaeche steht. Der
+            Kalender darf sie fuer sich leer lassen. */}
+        <PartnerLogo design={design} show={calendar.showPartnerLogo ?? true} />
       </header>
 
-      <CalendarSection page={calendar} />
+      <CalendarSection page={calendar} design={design} />
 
-      {event ? <SiteFooter page={event} /> : null}
+      {event ? <SiteFooter page={event} design={design} /> : null}
     </main>
+  )
+}
+
+/**
+ * Die Wortmarke als Link.
+ *
+ * Drei Arten von Zielen, drei Verhalten – dieselbe Unterscheidung wie
+ * bei den Links im Footer: eine andere Seite dieser Website ueber
+ * next/link, eine fremde Adresse in einem neuen Tab, alles andere
+ * (mailto:, tel:, Sprungmarken) als schlichter Link.
+ */
+function HeaderLogo({label, href}: {label: string; href: string}) {
+  const target = href.trim()
+
+  if (target.startsWith('/')) {
+    // prefetch aus, wie ueberall auf dieser Seite: lieber eine Anfrage
+    // mehr als ein veralteter Stand beim Klick.
+    return (
+      <Link className="logo" href={target} prefetch={false}>
+        {label}
+      </Link>
+    )
+  }
+
+  if (isExternal(target)) {
+    return (
+      <a className="logo" href={target} target="_blank" rel="noopener">
+        {label}
+      </a>
+    )
+  }
+
+  return (
+    <a className="logo" href={target}>
+      {label}
+    </a>
   )
 }
 

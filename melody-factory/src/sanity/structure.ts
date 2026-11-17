@@ -1,4 +1,5 @@
 import {CalendarIcon} from '@sanity/icons/Calendar'
+import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
 import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import type {StructureResolver} from 'sanity/structure'
 
@@ -34,10 +35,23 @@ export const structure: StructureResolver = (S) =>
             .documentId('calendarPage')
             .title('Kalender'),
         ),
+      // Die Gestaltung steht unter den Inhalten, nicht ueber ihnen: man
+      // pflegt sie einmal und dann selten wieder.
+      S.divider(),
+      S.listItem()
+        .title('Gestaltung')
+        .icon(ColorWheelIcon)
+        .id('siteSettings')
+        .child(
+          S.document()
+            .schemaType('siteSettings')
+            .documentId('siteSettings')
+            .title('Gestaltung'),
+        ),
     ])
 
 /** Dokumenttypen, die nicht ueber «Neu anlegen» auftauchen sollen. */
-export const singletonTypes = new Set(['eventPage', 'calendarPage'])
+export const singletonTypes = new Set(['eventPage', 'calendarPage', 'siteSettings'])
 
 /** Aktionen, die es bei einem Einzeldatensatz nicht geben darf. */
 export const singletonActions = new Set(['publish', 'discardChanges', 'restore'])

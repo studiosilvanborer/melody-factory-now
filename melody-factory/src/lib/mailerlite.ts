@@ -1,11 +1,13 @@
 /**
  * Die beiden Angaben aus dem MailerLite-Konto, an einer Stelle.
  *
- * Bewusst im Code und nicht im Studio: beides sind technische Kennungen
- * aus dem MailerLite-Backend, die sich nur aendern, wenn dort ein neues
- * Konto oder ein neues Formular angelegt wird. Im Studio waeren sie eine
- * Stolperstelle ohne Gewinn – was der Kunde wirklich pflegt, ist die
- * Beschriftung der Schaltflaeche, und die steht im Reiter «Newsletter».
+ * Es sind technische Kennungen aus dem MailerLite-Backend; sie aendern
+ * sich nur, wenn dort ein neues Konto oder ein neues Formular entsteht.
+ * Darum stehen sie hier als die Werte, die gelten, solange niemand etwas
+ * anderes verlangt – und im Studio, Datensatz «Gestaltung», Reiter
+ * «MailerLite», als Felder, die sie ueberschreiben. So braucht ein
+ * Wechsel im MailerLite-Konto keinen Deploy, und ein leeres Feld im
+ * Studio macht die Anmeldung trotzdem nicht kaputt.
  */
 
 /** Konto-ID aus dem Universal-Snippet. */

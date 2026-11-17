@@ -5,12 +5,19 @@ import Link from 'next/link'
 import {Suspense} from 'react'
 
 import {NewsletterButton} from '@/components/NewsletterButton'
+import {PartnerLogo} from '@/components/PartnerLogo'
 import {RichText} from '@/components/RichText'
 import {SiteFooter} from '@/components/Sections'
+import {resolveDesign} from '@/sanity/design'
 import {siteUrl} from '@/sanity/env'
 import {urlFor} from '@/sanity/image'
-import {fetchEventPage, resolveFetchMode, type FetchMode} from '@/sanity/live'
-import type {EventPageData} from '@/sanity/types'
+import {
+  fetchEventPage,
+  fetchSiteSettings,
+  resolveFetchMode,
+  type FetchMode,
+} from '@/sanity/live'
+import type {EventPageData, SiteSettingsData} from '@/sanity/types'
 
 /**
  * Die Seite wird bei der Anfrage gerechnet, nicht beim Bauen – dieselbe
@@ -71,9 +78,14 @@ async function DraftPage() {
 }
 
 async function PageContent({mode}: {mode: FetchMode}) {
-  const page = (await fetchEventPage(mode)) as EventPageData | null
+  const [page, settings] = await Promise.all([
+    fetchEventPage(mode) as Promise<EventPageData | null>,
+    fetchSiteSettings(mode) as Promise<SiteSettingsData>,
+  ])
 
   if (!page) return <NotSeededYet />
+
+  const design = resolveDesign(settings)
 
   return (
     <main className="page page--sub">
@@ -84,14 +96,7 @@ async function PageContent({mode}: {mode: FetchMode}) {
 
         {/* Dieselbe Ecke wie auf der Startseite, dieselbe Datei – hier
             aber schwarz, weil sie auf der Magentaflaeche steht. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="partner-logo"
-          src="/3fach-logo.png"
-          width={673}
-          height={300}
-          alt="3FACH"
-        />
+        <PartnerLogo design={design} />
       </header>
 
       <section className="section news" id="programm">
@@ -103,7 +108,10 @@ async function PageContent({mode}: {mode: FetchMode}) {
           <RichText value={page.newsletterLead} className="news__lead" />
 
           <p className="news__action reveal">
-            <NewsletterButton label={page.newsletterLabel || FALLBACK.label} />
+            <NewsletterButton
+              label={page.newsletterLabel || FALLBACK.label}
+              formId={design.mailerliteFormId}
+            />
           </p>
 
           {/* Der Knopf erscheint erst nach der Hydration – ohne
@@ -111,14 +119,12 @@ async function PageContent({mode}: {mode: FetchMode}) {
               braucht es ohnehin. Dann steht hier wenigstens, woran es
               liegt, statt einer leeren Stelle. */}
           <noscript>
-            <p className="news__lead">
-              Für die Anmeldung muss JavaScript eingeschaltet sein.
-            </p>
+            <p className="news__lead">{design.newsletterNoscript}</p>
           </noscript>
         </div>
       </section>
 
-      <SiteFooter page={page} />
+      <SiteFooter page={page} design={design} />
     </main>
   )
 }

@@ -61,6 +61,75 @@ export type RichText = Array<{
   _key: string;
 }>;
 
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type SiteSettings = {
+  _id: string;
+  _type: "siteSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  accentColor?: string;
+  inkColor?: string;
+  hoverColor?: string;
+  faviconLetter?: string;
+  faviconImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  partnerLogo?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  showPartnerLogo?: boolean;
+  partnerLogoWidth?: number;
+  partnerLogoWidthMobile?: number;
+  fontSerif?: string;
+  fontSans?: string;
+  fontStylesheets?: Array<string>;
+  heroFocusX?: number;
+  heroFocusY?: number;
+  heroFocusXMobile?: number;
+  heroFocusYMobile?: number;
+  heroScrim?: number;
+  enableAnimations?: boolean;
+  enableParallax?: boolean;
+  skipLinkLabel?: string;
+  footerNavLabel?: string;
+  newsletterNoscript?: string;
+  calendarTicketContext?: string;
+  mailerliteAccountId?: string;
+  mailerliteFormId?: string;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
 export type CalendarPage = {
   _id: string;
   _type: "calendarPage";
@@ -74,15 +143,11 @@ export type CalendarPage = {
     } & CalendarEntry
   >;
   emptyText: string;
+  logoText?: string;
+  logoHref?: string;
+  showPartnerLogo?: boolean;
   metaTitle: string;
   metaDescription: string;
-};
-
-export type SanityImageAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
 export type SanityFileAssetReference = {
@@ -177,22 +242,6 @@ export type EventPage = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -304,12 +353,13 @@ export type AllSanitySchemaTypes =
   | Fact
   | Link
   | RichText
-  | CalendarPage
   | SanityImageAssetReference
-  | SanityFileAssetReference
-  | EventPage
+  | SiteSettings
   | SanityImageCrop
   | SanityImageHotspot
+  | CalendarPage
+  | SanityFileAssetReference
+  | EventPage
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -409,8 +459,57 @@ export type EVENT_PAGE_QUERY_RESULT = {
 } | null;
 
 // Source: src/sanity/queries.ts
+// Variable: SITE_SETTINGS_QUERY
+// Query: *[_type == "siteSettings" && _id == "siteSettings"][0]{    accentColor,    inkColor,    hoverColor,    faviconLetter,    faviconImage{asset->{_id, url}},    partnerLogo{..., alt, asset->{_id, url, metadata{dimensions}}},    showPartnerLogo,    partnerLogoWidth,    partnerLogoWidthMobile,    fontSerif,    fontSans,    fontStylesheets,    heroFocusX,    heroFocusY,    heroFocusXMobile,    heroFocusYMobile,    heroScrim,    enableAnimations,    enableParallax,    skipLinkLabel,    footerNavLabel,    newsletterNoscript,    calendarTicketContext,    mailerliteAccountId,    mailerliteFormId  }
+export type SITE_SETTINGS_QUERY_RESULT = {
+  accentColor: string | null;
+  inkColor: string | null;
+  hoverColor: string | null;
+  faviconLetter: string | null;
+  faviconImage: {
+    asset: {
+      _id: string;
+      url: string;
+    } | null;
+  } | null;
+  partnerLogo: {
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | null;
+    _type: "image";
+  } | null;
+  showPartnerLogo: boolean | null;
+  partnerLogoWidth: number | null;
+  partnerLogoWidthMobile: number | null;
+  fontSerif: string | null;
+  fontSans: string | null;
+  fontStylesheets: Array<string> | null;
+  heroFocusX: number | null;
+  heroFocusY: number | null;
+  heroFocusXMobile: number | null;
+  heroFocusYMobile: number | null;
+  heroScrim: number | null;
+  enableAnimations: boolean | null;
+  enableParallax: boolean | null;
+  skipLinkLabel: string | null;
+  footerNavLabel: string | null;
+  newsletterNoscript: string | null;
+  calendarTicketContext: string | null;
+  mailerliteAccountId: string | null;
+  mailerliteFormId: string | null;
+} | null;
+
+// Source: src/sanity/queries.ts
 // Variable: CALENDAR_PAGE_QUERY
-// Query: *[_type == "calendarPage" && _id == "calendarPage"][0]{    title,    entries[]{startsAt, venue, production, ticketUrl, ticketLabel},    emptyText,    metaTitle,    metaDescription  }
+// Query: *[_type == "calendarPage" && _id == "calendarPage"][0]{    title,    entries[]{startsAt, venue, production, ticketUrl, ticketLabel},    emptyText,    logoText,    logoHref,    showPartnerLogo,    metaTitle,    metaDescription  }
 export type CALENDAR_PAGE_QUERY_RESULT = {
   title: string;
   entries: Array<{
@@ -421,6 +520,9 @@ export type CALENDAR_PAGE_QUERY_RESULT = {
     ticketLabel: string;
   }> | null;
   emptyText: string;
+  logoText: string | null;
+  logoHref: string | null;
+  showPartnerLogo: boolean | null;
   metaTitle: string;
   metaDescription: string;
 } | null;
@@ -429,7 +531,8 @@ export type CALENDAR_PAGE_QUERY_RESULT = {
 declare global {
   interface SanityQueries {
     '\n  *[_type == "eventPage" && _id == "eventPage"][0]{\n    heroImage{..., alt, asset->{_id, url, metadata{lqip, dimensions}}},\n    logoText,\n    claimLine1,\n    claimLine2,\n    claimLanguage,\n    productionTitle,\n    calendarLabel,\n    wordmark,\n\n    startsAt,\n    venueShort,\n    city,\n    venueFull,\n    duration,\n    additionalInfo,\n    ticketUrl,\n    ticketLabel,\n\n    introTitle,\n    introLead,\n\n    factsTitle,\n    labelDate,\n    labelDuration,\n    labelVenue,\n    labelAdditionalInfo,\n    additionalFacts[]{label, value},\n\n    castTitle,\n    cast[]{role, name},\n\n    infosTitle,\n    infosText,\n    infosOutro,\n\n    showTrailer,\n    trailerTitle,\n    trailerVideo{asset->{_id, url, mimeType}},\n    trailerUrl,\n    trailerPlaceholder,\n\n    footerLinkColumns[]{links[]{label, href}},\n    ctaTitle,\n    newsletterLabel,\n    footerWordmark,\n    footerLegal,\n\n    newsletterTitle,\n    newsletterLead,\n\n    metaTitle,\n    metaDescription,\n    shareTitle,\n    shareDescription,\n    shareImage{asset->{_id, url}}\n  }\n': EVENT_PAGE_QUERY_RESULT;
-    '\n  *[_type == "calendarPage" && _id == "calendarPage"][0]{\n    title,\n    entries[]{startsAt, venue, production, ticketUrl, ticketLabel},\n    emptyText,\n\n    metaTitle,\n    metaDescription\n  }\n': CALENDAR_PAGE_QUERY_RESULT;
+    '\n  *[_type == "siteSettings" && _id == "siteSettings"][0]{\n    accentColor,\n    inkColor,\n    hoverColor,\n    faviconLetter,\n    faviconImage{asset->{_id, url}},\n\n    partnerLogo{..., alt, asset->{_id, url, metadata{dimensions}}},\n    showPartnerLogo,\n    partnerLogoWidth,\n    partnerLogoWidthMobile,\n\n    fontSerif,\n    fontSans,\n    fontStylesheets,\n\n    heroFocusX,\n    heroFocusY,\n    heroFocusXMobile,\n    heroFocusYMobile,\n    heroScrim,\n\n    enableAnimations,\n    enableParallax,\n\n    skipLinkLabel,\n    footerNavLabel,\n    newsletterNoscript,\n    calendarTicketContext,\n\n    mailerliteAccountId,\n    mailerliteFormId\n  }\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "calendarPage" && _id == "calendarPage"][0]{\n    title,\n    entries[]{startsAt, venue, production, ticketUrl, ticketLabel},\n    emptyText,\n\n    logoText,\n    logoHref,\n    showPartnerLogo,\n\n    metaTitle,\n    metaDescription\n  }\n': CALENDAR_PAGE_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

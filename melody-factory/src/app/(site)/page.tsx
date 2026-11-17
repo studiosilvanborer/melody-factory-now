@@ -9,8 +9,14 @@ import {
   IntroSection,
   SiteFooter,
 } from '@/components/Sections'
-import {fetchEventPage, resolveFetchMode, type FetchMode} from '@/sanity/live'
-import type {EventPageData} from '@/sanity/types'
+import {resolveDesign} from '@/sanity/design'
+import {
+  fetchEventPage,
+  fetchSiteSettings,
+  resolveFetchMode,
+  type FetchMode,
+} from '@/sanity/live'
+import type {EventPageData, SiteSettingsData} from '@/sanity/types'
 
 /**
  * Die Seite wird bei der Anfrage gerechnet, nicht beim Bauen.
@@ -59,19 +65,26 @@ async function DraftPage() {
 }
 
 async function PageContent({mode}: {mode: FetchMode}) {
-  const page = (await fetchEventPage(mode)) as EventPageData | null
+  // Inhalt und Gestaltung in einem Rundgang: zwei Abfragen, die Sanity
+  // nebeneinander beantwortet.
+  const [page, settings] = await Promise.all([
+    fetchEventPage(mode) as Promise<EventPageData | null>,
+    fetchSiteSettings(mode) as Promise<SiteSettingsData>,
+  ])
 
   if (!page) return <NotSeededYet />
 
+  const design = resolveDesign(settings)
+
   return (
     <>
-      <Hero page={page} />
+      <Hero page={page} design={design} />
 
       <div className="page">
         <IntroSection page={page} />
         <FactsAndCastSection page={page} />
         <InfosAndTrailerSection page={page} />
-        <SiteFooter page={page} />
+        <SiteFooter page={page} design={design} />
       </div>
     </>
   )
